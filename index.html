@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>KACM Forum · Supporters</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    *{box-sizing:border-box}html,body{height:100%;margin:0;padding:0}
+    body{background:#f8f9fa;font-family:'Segoe UI',Roboto,system-ui,sans-serif;display:flex;flex-direction:column;min-height:100vh}
+    .kacm-red{color:#DA291C}.btn-kacm{background-color:#DA291C;color:#fff;border:none}.btn-kacm:hover{background-color:#b82218;color:#fff}
+    .btn-outline-kacm{border:2px solid #DA291C;color:#DA291C;background:transparent}.btn-outline-kacm:hover{background:#DA291C;color:#fff}
+    .navbar-kacm{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);border-bottom:3px solid #DA291C}
+    .forum-card{border-left:5px solid #DA291C;background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.04)}
+    .post-author{font-weight:600;color:#DA291C}.reply-badge{font-size:.75rem;background:#f1f1f1;border-radius:30px;padding:2px 12px}
+    .landing-hero{background:#fff;border-radius:32px 32px 0 0;padding:2rem 1rem;margin-top:-20px;position:relative;z-index:2}
+    .hero-image{width:120px;height:120px;margin:0 auto 10px;display:block;border-radius:50%;border:4px solid #DA291C;object-fit:cover;box-shadow:0 4px 20px rgba(218,41,28,.2);background:#fff;padding:8px}
+    .hero-image-container{text-align:center}
+    .admin-panel{background:#fff5f4;border-radius:24px;border:1px solid #ffd6d0}
+    .whatsapp-btn{background:#25D366;color:#fff;border:none}.whatsapp-btn:hover{background:#1ebe5a;color:#fff}
+    .modal-content{border-radius:28px;border:none}
+    .list-group-item{border-left:4px solid #DA291C;margin-bottom:6px;border-radius:12px}
+    .reply-item{background:#fafafa;border-radius:12px;padding:8px 16px;margin:6px 0;border-left:3px solid #DA291C}
+    .reply-item.reply-to{background:#fff5f2;border-left-color:#e67e22;margin-left:20px}
+    .reply-to-badge{font-size:.7rem;color:#e67e22;background:#fde8d0;padding:1px 10px;border-radius:20px;display:inline-block;margin-bottom:4px}
+    .container{max-width:600px;padding-left:16px;padding-right:16px}
+    .hidden{display:none!important}.pointer{cursor:pointer}
+    .page-content{margin-top:76px;margin-bottom:70px;flex:1 0 auto;transition:all .3s ease}
+    .admin-badge{background:#DA291C;color:#fff;font-size:.7rem;padding:2px 10px;border-radius:20px;margin-left:6px}
+    .modal-backdrop{z-index:1040!important}.modal{z-index:1050!important}.modal-backdrop.show{opacity:.5}.modal-open .modal{overflow-y:auto}
+    .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:3px solid #DA291C;padding:10px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+    .footer p{margin:0;font-size:.85rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
+    .reply-actions{display:flex;gap:8px;align-items:center}.reply-actions button{padding:0 6px;font-size:.75rem}
+    .btn-reply-to{background:transparent;border:none;color:#DA291C;font-size:.75rem;padding:0 4px}.btn-reply-to:hover{text-decoration:underline}
+    .reply-indent{margin-left:20px;border-left:2px dashed #ddd;padding-left:12px}
+    .post-content,.reply-text,.post-title{white-space:pre-wrap!important;word-wrap:break-word!important;overflow-wrap:break-word!important;line-height:1.6;max-width:100%}
+    .post-content{margin-top:6px;margin-bottom:8px}.reply-text{margin-top:4px}.post-title{font-weight:700;margin-top:4px;margin-bottom:2px}
+    .auto-rtl{unicode-bidi:plaintext}
+    textarea,input[type="text"],input[type="password"]{direction:auto;unicode-bidi:plaintext}
+    .char-counter{font-size:.75rem;color:#6c757d;margin-top:4px;text-align:right}
+    .char-counter.over-limit{color:#dc3545;font-weight:bold}.char-counter .current{font-weight:bold}.char-counter .max{color:#6c757d}
+    /* Loading state for buttons */
+    button.btn-loading{pointer-events:none;opacity:.75}
+    button.btn-loading .btn-original-content{display:none}
+    button.btn-loading .btn-loading-content{display:inline-flex!important}
+    .btn-loading-content{display:none!important;align-items:center;gap:6px}
+    @media(max-width:576px){.page-content{margin-bottom:80px}.footer p{font-size:.75rem}.hero-image{width:90px;height:90px;padding:6px}}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar navbar-kacm fixed-top py-2">
+  <div class="container d-flex justify-content-between align-items-center">
+    <span class="navbar-brand mb-0 h5 fw-bold"><i class="fas fa-futbol kacm-red me-2"></i>KACM·Forum</span>
+    <div>
+      <span id="userDisplay" class="badge bg-light text-dark me-2 d-none">
+        <i class="fas fa-user-circle kacm-red me-1"></i><span id="navUsername">Invité</span>
+      </span>
+      <button id="logoutBtn" class="btn btn-outline-kacm btn-sm d-none"><i class="fas fa-sign-out-alt"></i></button>
+      <button id="loginNavBtn" class="btn btn-kacm btn-sm"><i class="fas fa-sign-in-alt me-1"></i>Connexion</button>
+    </div>
+  </div>
+</nav>
+
+<!-- LANDING -->
+<div id="landingPage" class="page-content">
+  <div class="container mt-3 content-wrapper">
+    <div class="landing-hero shadow-sm p-4 text-center mt-3">
+      <div class="hero-image-container">
+        <img src="images/kacm.png" alt="KACM" class="hero-image" id="kacmLogo">
+      </div>
+      <h1 class="fw-bold mt-2" style="color:#DA291C;">KACM Supporters</h1>
+      <p class="text-muted">Le forum des lions de Marrakech</p>
+      <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+        <button id="showLoginBtn" class="btn btn-kacm px-4"><i class="fas fa-sign-in-alt me-1"></i>Se connecter</button>
+        <button id="showRegisterBtn" class="btn btn-outline-kacm px-4"><i class="fas fa-user-plus me-1"></i>S'inscrire</button>
+      </div>
+      <hr class="my-4">
+      <button id="reclamationBtn" class="btn whatsapp-btn px-4"><i class="fab fa-whatsapp me-2"></i>Réclamation</button>
+      <div class="mt-3">
+        <button id="adminAccessBtn" class="btn btn-secondary btn-sm"><i class="fas fa-user-cog"></i> Admin</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORUM -->
+<div id="forumPage" class="page-content hidden">
+  <div class="container content-wrapper">
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+      <h5 class="section-title"><i class="fas fa-comments kacm-red me-2"></i>Discussions</h5>
+      <button id="newPostBtn" class="btn btn-kacm btn-sm"><i class="fas fa-plus-circle"></i> Nouveau sujet</button>
+    </div>
+    <div id="postsList" class="mt-3"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.0</p>
+  </div>
+</footer>
+
+<!-- MODAL AUTH -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="authModalLabel"><i class="fas fa-user-circle kacm-red me-2"></i>Connexion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="authForm" novalidate>
+          <div class="mb-3">
+            <label class="form-label"><i class="fas fa-user kacm-red me-1"></i>Nom d'utilisateur</label>
+            <input type="text" id="authName" class="form-control" placeholder="Votre nom" required autocomplete="username">
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fas fa-lock kacm-red me-1"></i>Mot de passe</label>
+            <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-kacm w-100" id="authSubmitBtn">
+            <span class="btn-original-content"><i class="fas fa-sign-in-alt me-1"></i>Se connecter</span>
+            <span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span> Chargement...</span>
+          </button>
+          <p class="text-center mt-2 small">
+            <span id="toggleAuthText">Pas de compte ? <span class="kacm-red pointer" id="toggleAuthLink">Inscrivez-vous</span></span>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL POST -->
+<div class="modal fade" id="postModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold"><i class="fas fa-edit kacm-red me-2"></i>Nouveau sujet</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="postForm" novalidate>
+          <div class="mb-3">
+            <label class="form-label">Titre (max 50)</label>
+            <input type="text" id="postTitle" class="form-control" required maxlength="50">
+            <div class="char-counter"><span class="current" id="titleCounter">0</span><span class="max">/ 50</span></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Contenu (max 500)</label>
+            <textarea id="postContent" class="form-control" rows="4" required maxlength="500"></textarea>
+            <div class="char-counter"><span class="current" id="contentCounter">0</span><span class="max">/ 500</span></div>
+          </div>
+          <button type="submit" class="btn btn-kacm w-100" id="postSubmitBtn">
+            <span class="btn-original-content"><i class="fas fa-paper-plane me-1"></i>Publier</span>
+            <span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span> Chargement...</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RECLAMATION -->
+<div class="modal fade" id="reclamationModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold"><i class="fab fa-whatsapp kacm-red me-2"></i>Réclamation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reclamationForm" novalidate>
+          <div class="mb-3"><input type="text" id="recName" class="form-control" placeholder="Nom complet" required></div>
+          <div class="mb-3"><input type="tel" id="recPhone" class="form-control" placeholder="Téléphone" required></div>
+          <div class="mb-3">
+            <label class="form-label">Message (max 500)</label>
+            <textarea id="recMessage" class="form-control" rows="4" required maxlength="500"></textarea>
+            <div class="char-counter"><span class="current" id="recMsgCounter">0</span><span class="max">/ 500</span></div>
+          </div>
+          <button type="submit" class="btn whatsapp-btn w-100" id="recSubmitBtn">
+            <span class="btn-original-content"><i class="fab fa-whatsapp me-2"></i>Envoyer</span>
+            <span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span> Chargement...</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMIN -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-3 admin-panel">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold"><i class="fas fa-crown kacm-red me-2"></i>Admin · KACM</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small"><i class="fas fa-shield-alt me-1"></i>Gestion des utilisateurs</p>
+        <div id="adminUserList" class="list-group"></div>
+        <button id="adminResetBtn" class="btn btn-outline-danger btn-sm mt-3">
+          <span class="btn-original-content"><i class="fas fa-trash-alt"></i> Réinitialiser tout</span>
+          <span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span> Chargement...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  // ⚠️ REMPLACEZ PAR VOTRE URL GOOGLE APPS SCRIPT
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
+  const MAX_TITLE = 50, MAX_CONTENT = 500, MAX_REPLY = 250, ADMIN_PASS = 'Seddik';
+
+  let currentUser = null, posts = [], isLoginMode = true;
+
+  // DOM
+  const $ = id => document.getElementById(id);
+  const landingPage=$('landingPage'), forumPage=$('forumPage'), postsList=$('postsList');
+  const navUsername=$('navUsername'), userDisplay=$('userDisplay'), logoutBtn=$('logoutBtn'), loginNavBtn=$('loginNavBtn');
+  const authModal=new bootstrap.Modal($('authModal')), authForm=$('authForm'), authSubmitBtn=$('authSubmitBtn');
+  const toggleAuthLink=$('toggleAuthLink'), toggleAuthText=$('toggleAuthText');
+  const authModalLabel=$('authModalLabel'), authName=$('authName'), authPassword=$('authPassword');
+  const postModal=new bootstrap.Modal($('postModal')), postForm=$('postForm');
+  const postTitle=$('postTitle'), postContent=$('postContent'), titleCounter=$('titleCounter'), contentCounter=$('contentCounter');
+  const recModal=new bootstrap.Modal($('reclamationModal')), recForm=$('reclamationForm'), recMsgCounter=$('recMsgCounter');
+  const adminModal=new bootstrap.Modal($('adminModal')), adminUserList=$('adminUserList'), adminResetBtn=$('adminResetBtn');
+
+  // Logo fallback
+  $('kacmLogo')?.addEventListener('error',function(){this.style.display='none';const d=document.createElement('div');d.innerHTML='<i class="fas fa-shield-alt" style="font-size:4rem;color:#DA291C"></i>';this.parentNode.appendChild(d);});
+
+  // ===================== SHOW LOADING =====================
+  function showLoading(btn, loading) {
+    if (!btn) return;
+    if (loading) {
+      btn.classList.add('btn-loading');
+      btn.disabled = true;
+    } else {
+      btn.classList.remove('btn-loading');
+      btn.disabled = false;
+    }
+  }
+
+  // ===================== API =====================
+  async function api(payload, btn) {
+    showLoading(btn, true);
+    try {
+      const res = await fetch(API_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)});
+      const text = await res.text();
+      try { return JSON.parse(text); }
+      catch(e) { return (res.ok||res.status===0)?{success:true}:{success:false,message:'Réponse invalide'}; }
+    } catch(err) {
+      return {success:false, message:'Impossible de joindre le serveur'};
+    } finally {
+      showLoading(btn, false);
+    }
+  }
+
+  // ===================== HELPERS =====================
+  const isLoggedIn=()=>currentUser!==null, isAdmin=()=>currentUser?.isAdmin===true;
+  function showToast(icon,title,text){Swal.fire({icon,title,text,timer:2500,showConfirmButton:false,position:'top-end'});}
+  function isArabic(t){return t&&/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(t);}
+  function getDir(t){return isArabic(t)?'rtl':'ltr';}
+  function getReplyAuthor(id,post){const r=post?.replies?.find(x=>x.id===id);return r?r.authorName:null;}
+  function updateCounter(inp,el,max){const l=inp.value.length;el.textContent=l;el.parentElement.classList.toggle('over-limit',l>max);el.style.color=l>max?'#dc3545':'';if(l>max)inp.value=inp.value.substring(0,max);}
+  function showPages(){landingPage.classList.toggle('hidden',isLoggedIn());forumPage.classList.toggle('hidden',!isLoggedIn());}
+  function closeAllModals(){document.querySelectorAll('.modal.show').forEach(m=>bootstrap.Modal.getInstance(m)?.hide());document.querySelectorAll('.modal-backdrop').forEach(b=>b.remove());document.body.classList.remove('modal-open');}
+
+  // ===================== LOAD DATA =====================
+  async function loadForumData(){
+    postsList.innerHTML='<div class="text-center py-5"><div class="spinner-border kacm-red"></div><p class="mt-2 text-muted">Chargement...</p></div>';
+    const res=await api({action:'getForumData'});
+    if(res.success&&res.posts){posts=res.posts;renderPosts();}
+    else postsList.innerHTML=`<div class="text-center text-muted py-5"><i class="fas fa-exclamation-triangle fa-2x mb-2"></i><p>${res.message||'Erreur'}</p><button class="btn btn-outline-kacm btn-sm" onclick="location.reload()">Réessayer</button></div>`;
+  }
+
+  // ===================== RENDER =====================
+  function renderPosts(){
+    if(!posts.length){postsList.innerHTML='<div class="text-center text-muted py-5"><i class="fas fa-comment-slash fa-2x mb-2"></i><p>Aucun sujet</p></div>';return;}
+    let html='';
+    posts.slice().reverse().forEach(p=>{
+      const isAuth=isLoggedIn()&&currentUser.id===p.authorId, isAdm=isAdmin(), tD=getDir(p.title), cD=getDir(p.content);
+      let rep='';
+      if(p.replies?.length){
+        const mains=p.replies.filter(r=>!r.replyTo), subs=p.replies.filter(r=>r.replyTo);
+        mains.forEach(mr=>{const mD=getDir(mr.text);rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text auto-rtl" style="direction:${mD};text-align:${mD==='rtl'?'right':'left'}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${(isLoggedIn()&&(currentUser.id===mr.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sD=getDir(s.text);return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text auto-rtl" style="direction:${sD};text-align:${sD==='rtl'?'right':'left'}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${(isLoggedIn()&&(currentUser.id===s.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;});
+      }else rep='<div class="text-muted small">Aucune réponse</div>';
+
+      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${(isAuth||isAdm)?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title auto-rtl" style="direction:${tD};text-align:${tD==='rtl'?'right':'left'}">${p.title}</div><div class="post-content auto-rtl" style="direction:${cD};text-align:${cD==='rtl'?'right':'left'}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
+    });
+    postsList.innerHTML=html;
+    attachEvents();
+  }
+
+  function attachEvents(){
+    document.querySelectorAll('.del-post-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'deletePost',postId:this.dataset.pid},this);loadForumData();showToast('info','Supprimé');}});
+    document.querySelectorAll('.del-reply-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer réponse?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'deleteReply',postId:this.dataset.pid,replyId:this.dataset.rid},this);loadForumData();showToast('info','Supprimée');}});
+    document.querySelectorAll('.reply-toggle-btn').forEach(b=>b.onclick=function(){const f=$(`rf-${this.dataset.pid}`);if(f){f.classList.toggle('hidden');const i=f.querySelector('.reply-input');if(i){delete i.dataset.replyto;i.placeholder='Réponse (max 250)...';i.value='';}f.querySelector('.reply-ctx').innerHTML='';f.querySelector('.reply-ctr').textContent='0';}});
+    document.querySelectorAll('.submit-reply-btn').forEach(b=>b.onclick=async function(){const pid=this.dataset.pid,f=$(`rf-${pid}`),inp=f.querySelector('.reply-input');if(inp?.value.trim()){if(inp.value.length>MAX_REPLY){showToast('warning','Trop long');return;}await api({action:'addReply',postId:pid,authorId:currentUser.id,authorName:currentUser.name,text:inp.value.trim(),replyTo:inp.dataset.replyto||null},this);f.classList.add('hidden');inp.value='';loadForumData();showToast('success','Réponse ajoutée');}});
+    document.querySelectorAll('.reply-input').forEach(i=>{const ctr=i.closest('.reply-form-wrapper')?.querySelector('.reply-ctr');i.oninput=function(){if(ctr){ctr.textContent=this.value.length;ctr.style.color=this.value.length>MAX_REPLY?'#dc3545':'';}if(this.value.length>MAX_REPLY)this.value=this.value.substring(0,MAX_REPLY);};i.onkeypress=function(e){if(e.key==='Enter'){e.preventDefault();this.closest('.reply-form-wrapper').querySelector('.submit-reply-btn').click();}};});
+    document.querySelectorAll('.replay-btn').forEach(b=>b.onclick=function(e){e.stopPropagation();const pid=this.dataset.pid,rid=this.dataset.rid,rn=this.dataset.rn,f=$(`rf-${pid}`);if(f){f.classList.remove('hidden');f.querySelector('.reply-ctx').innerHTML=`<i class="fas fa-reply-all kacm-red"></i> À <strong>${rn}</strong>`;const inp=f.querySelector('.reply-input');if(inp){inp.dataset.replyto=rid;inp.placeholder=`Répondre à ${rn}...`;inp.focus();inp.value='';}f.querySelector('.reply-ctr').textContent='0';}});
+  }
+
+  // ===================== AUTH =====================
+  function openAuth(mode){
+    closeAllModals();authForm.reset();isLoginMode=mode==='login';
+    authModalLabel.innerHTML=isLoginMode?'<i class="fas fa-sign-in-alt kacm-red me-2"></i>Connexion':'<i class="fas fa-user-plus kacm-red me-2"></i>Inscription';
+    authSubmitBtn.querySelector('.btn-original-content').innerHTML=isLoginMode?'<i class="fas fa-sign-in-alt me-1"></i>Se connecter':'<i class="fas fa-user-plus me-1"></i>S\'inscrire';
+    toggleAuthText.innerHTML=isLoginMode?'Pas de compte ? <span class="kacm-red pointer" id="toggleAuthLink">Inscrivez-vous</span>':'Déjà un compte ? <span class="kacm-red pointer" id="toggleAuthLink">Connectez-vous</span>';
+    $('toggleAuthLink').onclick=()=>openAuth(isLoginMode?'register':'login');
+    authModal.show();
+  }
+
+  authForm.onsubmit=async function(e){
+    e.preventDefault();
+    const name=authName.value.trim(),pass=authPassword.value.trim();
+    if(!name||!pass){showToast('warning','Champs requis','Nom et mot de passe obligatoires');return;}
+    const action=isLoginMode?'login':'register';
+    const res=await api({action,name,password:pass},authSubmitBtn);
+    if(res.success){
+      currentUser=res.user;updateUI();authModal.hide();loadForumData();
+      showToast('success',isLoginMode?'Bonjour '+currentUser.name:'Bienvenue '+currentUser.name);
+    }else showToast('error','Erreur',res.message||'Échec');
+  };
+
+  function updateUI(){
+    if(isLoggedIn()){navUsername.innerHTML=currentUser.name+(isAdmin()?' <span class="admin-badge">Admin</span>':'');userDisplay.classList.remove('d-none');logoutBtn.classList.remove('d-none');loginNavBtn.classList.add('d-none');}
+    else{navUsername.textContent='Invité';userDisplay.classList.add('d-none');logoutBtn.classList.add('d-none');loginNavBtn.classList.remove('d-none');postsList.innerHTML='';}
+    showPages();
+  }
+
+  logoutBtn.onclick=()=>{currentUser=null;updateUI();showToast('info','Déconnecté');};
+  $('showLoginBtn').onclick=()=>openAuth('login');
+  $('showRegisterBtn').onclick=()=>openAuth('register');
+  loginNavBtn.onclick=()=>openAuth('login');
+
+  // ===================== NEW POST =====================
+  $('newPostBtn').onclick=()=>{if(!isLoggedIn()){showToast('warning','Connectez-vous');return;}postForm.reset();titleCounter.textContent='0';contentCounter.textContent='0';postModal.show();};
+  postForm.onsubmit=async function(e){
+    e.preventDefault();const t=postTitle.value.trim(),c=postContent.value.trim();
+    if(!t||!c){showToast('warning','Champs vides');return;}
+    if(t.length>MAX_TITLE||c.length>MAX_CONTENT){showToast('warning','Trop long');return;}
+    const res=await api({action:'addPost',authorId:currentUser.id,authorName:currentUser.name,title:t,content:c},$('postSubmitBtn'));
+    if(res.success){postModal.hide();loadForumData();showToast('success','Sujet publié');}
+    else showToast('error','Erreur',res.message);
+  };
+
+  // ===================== COUNTERS =====================
+  postTitle.oninput=()=>updateCounter(postTitle,titleCounter,MAX_TITLE);
+  postContent.oninput=()=>updateCounter(postContent,contentCounter,MAX_CONTENT);
+  $('recMessage').oninput=function(){updateCounter(this,recMsgCounter,MAX_CONTENT);};
+
+  // ===================== RECLAMATION =====================
+  $('reclamationBtn').onclick=()=>{recForm.reset();recMsgCounter.textContent='0';recModal.show();};
+  recForm.onsubmit=function(e){
+    e.preventDefault();
+    const n=$('recName').value.trim(),p=$('recPhone').value.trim(),m=$('recMessage').value.trim();
+    if(!n||!p||!m){showToast('warning','Champs requis');return;}
+    if(m.length>MAX_CONTENT){showToast('warning','Trop long');return;}
+    showLoading($('recSubmitBtn'),true);
+    setTimeout(()=>{
+      window.open(`https://wa.me/212608975435?text=${encodeURIComponent('Réclamation KACM :\nNom: '+n+'\nTél: '+p+'\nMessage: '+m)}`,'_blank');
+      Swal.fire({icon:'success',title:'Envoyée!',text:'Ghadi n3aljoha f a9rab wa9t',confirmButtonColor:'#DA291C'});
+      recModal.hide();showLoading($('recSubmitBtn'),false);
+    },800);
+  };
+
+  // ===================== ADMIN =====================
+  $('adminAccessBtn').onclick=async function(){
+    if(isAdmin()){const r=await api({action:'adminGetUsers',password:ADMIN_PASS},this);if(r.success)renderAdmin(r.users);adminModal.show();return;}
+    const res=await Swal.fire({title:'Accès Admin',input:'password',showCancelButton:true,confirmButtonText:'Valider'});
+    if(res.isConfirmed&&res.value===ADMIN_PASS){
+      currentUser={id:'admin',name:'Admin KACM',isAdmin:true};updateUI();
+      const r=await api({action:'adminGetUsers',password:ADMIN_PASS},this);if(r.success)renderAdmin(r.users);
+      adminModal.show();showToast('success','Bienvenue Admin');
+    }else if(res.isConfirmed)showToast('error','Mot de passe incorrect');
+  };
+
+  function renderAdmin(users){
+    adminUserList.innerHTML=(users||[]).map(u=>`<div class="list-group-item d-flex justify-content-between align-items-center"><div><i class="fas fa-user-circle kacm-red me-2"></i>${u.name} ${u.isAdmin?'<span class="badge bg-warning text-dark">Admin</span>':''}</div><div>${!u.isAdmin?`<button class="btn btn-sm btn-outline-danger block-btn" data-uid="${u.id}"><span class="btn-original-content"><i class="fas fa-ban"></i> Bloquer</span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button>`:''}</div></div>`).join('')||'<p class="text-muted">Aucun utilisateur</p>';
+    document.querySelectorAll('.block-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Bloquer?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'adminBlockUser',userId:this.dataset.uid,password:ADMIN_PASS},this);const r=await api({action:'adminGetUsers',password:ADMIN_PASS});if(r.success)renderAdmin(r.users);showToast('info','Bloqué');}});
+  }
+
+  adminResetBtn.onclick=async function(){if((await Swal.fire({title:'Tout réinitialiser?',icon:'error',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'adminReset',password:ADMIN_PASS},this);loadForumData();const r=await api({action:'adminGetUsers',password:ADMIN_PASS});if(r.success)renderAdmin(r.users);showToast('info','Réinitialisé');}};
+
+  // Modal cleanup
+  document.querySelectorAll('.modal').forEach(m=>m.addEventListener('hidden.bs.modal',()=>{document.querySelectorAll('.modal-backdrop').forEach(b=>b.remove());document.body.classList.remove('modal-open');}));
+
+  // INIT
+  updateUI();
+})();
+</script>
+</body>
+</html>
