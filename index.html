@@ -13,7 +13,7 @@
     .kacm-red{color:#DA291C}.btn-kacm{background-color:#DA291C;color:#fff;border:none}.btn-kacm:hover{background-color:#b82218;color:#fff}
     .btn-outline-kacm{border:2px solid #DA291C;color:#DA291C;background:transparent}.btn-outline-kacm:hover{background:#DA291C;color:#fff}
     .navbar-kacm{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);border-bottom:3px solid #DA291C}
-    .forum-card{border-left:5px solid #DA291C;background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.04)}
+    .forum-card{border-left:5px solid #DA291C;background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.04);scroll-margin-bottom:80px}
     .post-author{font-weight:600;color:#DA291C}.reply-badge{font-size:.75rem;background:#f1f1f1;border-radius:30px;padding:2px 12px}
     .landing-hero{background:#fff;border-radius:32px 32px 0 0;padding:2rem 1rem;margin-top:-20px;position:relative;z-index:2}
     .hero-image{width:120px;height:120px;margin:0 auto 10px;display:block;border-radius:50%;border:4px solid #DA291C;object-fit:cover;box-shadow:0 4px 20px rgba(218,41,28,.2);background:#fff;padding:8px}
@@ -27,34 +27,25 @@
     .reply-to-badge{font-size:.7rem;color:#e67e22;background:#fde8d0;padding:1px 10px;border-radius:20px;display:inline-block;margin-bottom:4px}
     .container{max-width:600px;padding-left:16px;padding-right:16px}
     .hidden{display:none!important}.pointer{cursor:pointer}
-    .page-content{margin-top:76px;margin-bottom:70px;flex:1 0 auto;transition:all .3s ease}
+    
+    /* === ANTI-SUPERPOSITION FOOTER === */
+    .page-content{margin-top:76px;flex:1 0 auto;transition:all .3s ease;padding-bottom:90px!important}
+    
     .admin-badge{background:#DA291C;color:#fff;font-size:.7rem;padding:2px 10px;border-radius:20px;margin-left:6px}
     .modal-backdrop{z-index:1040!important}.modal{z-index:1050!important}.modal-backdrop.show{opacity:.5}.modal-open .modal{overflow-y:auto}
-    .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:3px solid #DA291C;padding:10px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+    
+    /* === FOOTER FIXE SANS SUPERPOSITION === */
+    .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:3px solid #DA291C;padding:12px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
     .footer p{margin:0;font-size:.85rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
+    
     .reply-actions{display:flex;gap:8px;align-items:center}.reply-actions button{padding:0 6px;font-size:.75rem}
     .btn-reply-to{background:transparent;border:none;color:#DA291C;font-size:.75rem;padding:0 4px}.btn-reply-to:hover{text-decoration:underline}
     .reply-indent{margin-left:20px;border-left:2px dashed #ddd;padding-left:12px}
     
-    /* === TEXTE JUSTIFIÉ POUR POSTS & RÉPONSES === */
-    .post-content, .reply-text, .post-title {
-      white-space: pre-wrap !important;
-      word-wrap: break-word !important;
-      overflow-wrap: break-word !important;
-      line-height: 1.7;
-      max-width: 100%;
-      text-align: justify !important;
-      text-align-last: left;
-    }
-    /* Pour le RTL, text-align-last reste à droite naturellement */
-    [dir="rtl"] .post-content, [dir="rtl"] .reply-text, [dir="rtl"] .post-title,
-    .post-content.rtl-text, .reply-text.rtl-text, .post-title.rtl-text {
-      text-align-last: right;
-    }
-    
-    .post-content{margin-top:6px;margin-bottom:8px}
-    .reply-text{margin-top:4px}
-    .post-title{font-weight:700;margin-top:4px;margin-bottom:2px}
+    /* === TEXTE JUSTIFIÉ === */
+    .post-content,.reply-text,.post-title{white-space:pre-wrap!important;word-wrap:break-word!important;overflow-wrap:break-word!important;line-height:1.7;max-width:100%;text-align:justify!important;text-align-last:left}
+    .rtl-text{text-align-last:right!important}
+    .post-content{margin-top:6px;margin-bottom:8px}.reply-text{margin-top:4px}.post-title{font-weight:700;margin-top:4px;margin-bottom:2px}
     .auto-rtl{unicode-bidi:plaintext}
     textarea,input[type="text"],input[type="password"]{direction:auto;unicode-bidi:plaintext}
     .char-counter{font-size:.75rem;color:#6c757d;margin-top:4px;text-align:right}
@@ -67,11 +58,11 @@
     .btn-loading-content{display:none!important;align-items:center;gap:6px}
     
     @media(max-width:576px){
-      .page-content{margin-bottom:80px}
+      .page-content{padding-bottom:100px!important}
       .footer p{font-size:.75rem}
       .hero-image{width:90px;height:90px;padding:6px}
-      /* Sur très petit écran, on évite le justify pour les textes courts */
       .reply-text{text-align:left!important}
+      .forum-card{scroll-margin-bottom:100px}
     }
   </style>
 </head>
@@ -93,7 +84,7 @@
 
 <!-- LANDING -->
 <div id="landingPage" class="page-content">
-  <div class="container mt-3 content-wrapper">
+  <div class="container mt-3">
     <div class="landing-hero shadow-sm p-4 text-center mt-3">
       <div class="hero-image-container">
         <img src="images/kacm.png" alt="KACM" class="hero-image" id="kacmLogo">
@@ -115,7 +106,7 @@
 
 <!-- FORUM -->
 <div id="forumPage" class="page-content hidden">
-  <div class="container content-wrapper">
+  <div class="container">
     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
       <h5 class="section-title"><i class="fas fa-comments kacm-red me-2"></i>Discussions</h5>
       <button id="newPostBtn" class="btn btn-kacm btn-sm"><i class="fas fa-plus-circle"></i> Nouveau sujet</button>
@@ -127,7 +118,7 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.1</p>
+    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.2</p>
   </div>
 </footer>
 
@@ -243,8 +234,8 @@
 <script>
 (function(){
   const API_URL = 'https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
-  const MAX_TITLE=50, MAX_CONTENT=500, MAX_REPLY=250, ADMIN_PASS='Seddik';
-  let currentUser=null, posts=[], isLoginMode=true;
+  const MAX_TITLE=50,MAX_CONTENT=500,MAX_REPLY=250,ADMIN_PASS='Seddik';
+  let currentUser=null,posts=[],isLoginMode=true;
 
   const $=id=>document.getElementById(id);
   const landingPage=$('landingPage'),forumPage=$('forumPage'),postsList=$('postsList');
@@ -258,10 +249,8 @@
 
   $('kacmLogo')?.addEventListener('error',function(){this.style.display='none';const d=document.createElement('div');d.innerHTML='<i class="fas fa-shield-alt" style="font-size:4rem;color:#DA291C"></i>';this.parentNode.appendChild(d);});
 
-  // === SHOW LOADING ===
   function showLoading(btn,loading){if(!btn)return;if(loading){btn.classList.add('btn-loading');btn.disabled=true;}else{btn.classList.remove('btn-loading');btn.disabled=false;}}
 
-  // === API ===
   async function api(payload,btn){
     showLoading(btn,true);
     try{
@@ -272,8 +261,7 @@
     finally{showLoading(btn,false);}
   }
 
-  // === HELPERS ===
-  const isLoggedIn=()=>currentUser!==null, isAdmin=()=>currentUser?.isAdmin===true;
+  const isLoggedIn=()=>currentUser!==null,isAdmin=()=>currentUser?.isAdmin===true;
   function showToast(icon,title,text){Swal.fire({icon,title,text,timer:2500,showConfirmButton:false,position:'top-end'});}
   function isArabic(t){return t&&/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(t);}
   function getDir(t){return isArabic(t)?'rtl':'ltr';}
@@ -282,7 +270,6 @@
   function showPages(){landingPage.classList.toggle('hidden',isLoggedIn());forumPage.classList.toggle('hidden',!isLoggedIn());}
   function closeAllModals(){document.querySelectorAll('.modal.show').forEach(m=>bootstrap.Modal.getInstance(m)?.hide());document.querySelectorAll('.modal-backdrop').forEach(b=>b.remove());document.body.classList.remove('modal-open');}
 
-  // === LOAD DATA ===
   async function loadForumData(){
     postsList.innerHTML='<div class="text-center py-5"><div class="spinner-border kacm-red"></div><p class="mt-2 text-muted">Chargement...</p></div>';
     const res=await api({action:'getForumData'});
@@ -290,15 +277,13 @@
     else postsList.innerHTML=`<div class="text-center text-muted py-5"><i class="fas fa-exclamation-triangle fa-2x mb-2"></i><p>${res.message||'Erreur'}</p><button class="btn btn-outline-kacm btn-sm" onclick="location.reload()">Réessayer</button></div>`;
   }
 
-  // === RENDER POSTS (avec texte justifié via CSS + classe rtl-text si arabe) ===
   function renderPosts(){
     if(!posts.length){postsList.innerHTML='<div class="text-center text-muted py-5"><i class="fas fa-comment-slash fa-2x mb-2"></i><p>Aucun sujet</p></div>';return;}
     let html='';
     posts.slice().reverse().forEach(p=>{
       const isAuth=isLoggedIn()&&currentUser.id===p.authorId,isAdm=isAdmin();
       const tD=getDir(p.title),cD=getDir(p.content);
-      const tRtl=tD==='rtl'?'rtl-text':'', cRtl=cD==='rtl'?'rtl-text':'';
-
+      const tRtl=tD==='rtl'?'rtl-text':'',cRtl=cD==='rtl'?'rtl-text':'';
       let rep='';
       if(p.replies?.length){
         const mains=p.replies.filter(r=>!r.replyTo),subs=p.replies.filter(r=>r.replyTo);
@@ -307,7 +292,6 @@
           rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text ${mRtl}" style="direction:${mD}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${(isLoggedIn()&&(currentUser.id===mr.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sD=getDir(s.text),sRtl=sD==='rtl'?'rtl-text':'';return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text ${sRtl}" style="direction:${sD}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${(isLoggedIn()&&(currentUser.id===s.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;
         });
       }else rep='<div class="text-muted small">Aucune réponse</div>';
-
       html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${(isAuth||isAdm)?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title ${tRtl}" style="direction:${tD}">${p.title}</div><div class="post-content ${cRtl}" style="direction:${cD}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
     });
     postsList.innerHTML=html;
@@ -323,7 +307,6 @@
     document.querySelectorAll('.replay-btn').forEach(b=>b.onclick=function(e){e.stopPropagation();const pid=this.dataset.pid,rid=this.dataset.rid,rn=this.dataset.rn,f=$(`rf-${pid}`);if(f){f.classList.remove('hidden');f.querySelector('.reply-ctx').innerHTML=`<i class="fas fa-reply-all kacm-red"></i> À <strong>${rn}</strong>`;const inp=f.querySelector('.reply-input');if(inp){inp.dataset.replyto=rid;inp.placeholder=`Répondre à ${rn}...`;inp.focus();inp.value='';}f.querySelector('.reply-ctr').textContent='0';}});
   }
 
-  // === AUTH ===
   function openAuth(mode){
     closeAllModals();authForm.reset();isLoginMode=mode==='login';
     authModalLabel.innerHTML=isLoginMode?'<i class="fas fa-sign-in-alt kacm-red me-2"></i>Connexion':'<i class="fas fa-user-plus kacm-red me-2"></i>Inscription';
@@ -353,7 +336,6 @@
   $('showRegisterBtn').onclick=()=>openAuth('register');
   loginNavBtn.onclick=()=>openAuth('login');
 
-  // === NEW POST ===
   $('newPostBtn').onclick=()=>{if(!isLoggedIn()){showToast('warning','Connectez-vous');return;}postForm.reset();titleCounter.textContent='0';contentCounter.textContent='0';postModal.show();};
   postForm.onsubmit=async function(e){
     e.preventDefault();const t=postTitle.value.trim(),c=postContent.value.trim();
@@ -363,12 +345,10 @@
     if(res.success){postModal.hide();loadForumData();showToast('success','Sujet publié');}else showToast('error','Erreur',res.message);
   };
 
-  // === COUNTERS ===
   postTitle.oninput=()=>updateCounter(postTitle,titleCounter,MAX_TITLE);
   postContent.oninput=()=>updateCounter(postContent,contentCounter,MAX_CONTENT);
   $('recMessage').oninput=function(){updateCounter(this,recMsgCounter,MAX_CONTENT);};
 
-  // === RECLAMATION ===
   $('reclamationBtn').onclick=()=>{recForm.reset();recMsgCounter.textContent='0';recModal.show();};
   recForm.onsubmit=function(e){
     e.preventDefault();
@@ -383,7 +363,6 @@
     },800);
   };
 
-  // === ADMIN ===
   $('adminAccessBtn').onclick=async function(){
     if(isAdmin()){const r=await api({action:'adminGetUsers',password:ADMIN_PASS},this);if(r.success)renderAdmin(r.users);adminModal.show();return;}
     const res=await Swal.fire({title:'Accès Admin',input:'password',showCancelButton:true,confirmButtonText:'Valider'});
