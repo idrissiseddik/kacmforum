@@ -27,41 +27,45 @@
     .reply-to-badge{font-size:.7rem;color:#e67e22;background:#fde8d0;padding:1px 10px;border-radius:20px;display:inline-block;margin-bottom:4px}
     .container{max-width:600px;padding-left:16px;padding-right:16px}
     .hidden{display:none!important}.pointer{cursor:pointer}
-    
-    /* === ANTI-SUPERPOSITION FOOTER === */
     .page-content{margin-top:76px;flex:1 0 auto;transition:all .3s ease;padding-bottom:90px!important}
-    
     .admin-badge{background:#DA291C;color:#fff;font-size:.7rem;padding:2px 10px;border-radius:20px;margin-left:6px}
     .modal-backdrop{z-index:1040!important}.modal{z-index:1050!important}.modal-backdrop.show{opacity:.5}.modal-open .modal{overflow-y:auto}
-    
-    /* === FOOTER FIXE SANS SUPERPOSITION === */
     .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:3px solid #DA291C;padding:12px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
     .footer p{margin:0;font-size:.85rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
-    
     .reply-actions{display:flex;gap:8px;align-items:center}.reply-actions button{padding:0 6px;font-size:.75rem}
     .btn-reply-to{background:transparent;border:none;color:#DA291C;font-size:.75rem;padding:0 4px}.btn-reply-to:hover{text-decoration:underline}
     .reply-indent{margin-left:20px;border-left:2px dashed #ddd;padding-left:12px}
-    
-    /* === TEXTE JUSTIFIÉ === */
-    .post-content,.reply-text,.post-title{white-space:pre-wrap!important;word-wrap:break-word!important;overflow-wrap:break-word!important;line-height:1.7;max-width:100%;text-align:justify!important;text-align-last:left}
-    .rtl-text{text-align-last:right!important}
+    .post-content,.reply-text,.post-title{white-space:pre-wrap!important;word-wrap:break-word!important;overflow-wrap:break-word!important;line-height:1.7;max-width:100%;text-align:justify!important}
+    .text-ltr{direction:ltr;text-align-last:left}
+    .text-rtl{direction:rtl;text-align-last:right}
     .post-content{margin-top:6px;margin-bottom:8px}.reply-text{margin-top:4px}.post-title{font-weight:700;margin-top:4px;margin-bottom:2px}
-    .auto-rtl{unicode-bidi:plaintext}
     textarea,input[type="text"],input[type="password"]{direction:auto;unicode-bidi:plaintext}
     .char-counter{font-size:.75rem;color:#6c757d;margin-top:4px;text-align:right}
     .char-counter.over-limit{color:#dc3545;font-weight:bold}.char-counter .current{font-weight:bold}.char-counter .max{color:#6c757d}
-    
-    /* Loading state */
     button.btn-loading{pointer-events:none;opacity:.75}
     button.btn-loading .btn-original-content{display:none}
     button.btn-loading .btn-loading-content{display:inline-flex!important}
     .btn-loading-content{display:none!important;align-items:center;gap:6px}
-    
+
+    /* === TOGGLE RÉPONSES === */
+    .toggle-replies-btn{
+      display:block;width:100%;border:none;background:transparent;
+      color:#DA291C;font-size:.85rem;font-weight:600;
+      padding:10px 0;margin-top:6px;cursor:pointer;
+      border-top:1px dashed #eee;transition:all .2s;
+    }
+    .toggle-replies-btn:hover{background:#fff5f4;border-radius:8px}
+    .toggle-replies-btn i{margin-left:6px;transition:transform .3s}
+    .toggle-replies-btn.expanded i{transform:rotate(180deg)}
+
+    .admin-stat{background:#fff;border-radius:12px;padding:12px;text-align:center;border:1px solid #ffd6d0}
+    .admin-stat .num{font-size:1.5rem;font-weight:800;color:#DA291C}
+    .admin-stat .lbl{font-size:.75rem;color:#666}
+
     @media(max-width:576px){
       .page-content{padding-bottom:100px!important}
       .footer p{font-size:.75rem}
       .hero-image{width:90px;height:90px;padding:6px}
-      .reply-text{text-align:left!important}
       .forum-card{scroll-margin-bottom:100px}
     }
   </style>
@@ -118,7 +122,7 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.2</p>
+    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.9</p>
   </div>
 </footer>
 
@@ -215,16 +219,27 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content p-3 admin-panel">
       <div class="modal-header border-0 pb-0">
-        <h5 class="modal-title fw-bold"><i class="fas fa-crown kacm-red me-2"></i>Admin · KACM</h5>
+        <h5 class="modal-title fw-bold"><i class="fas fa-crown kacm-red me-2"></i>Panneau Admin · KACM</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <p class="text-muted small"><i class="fas fa-shield-alt me-1"></i>Gestion des utilisateurs</p>
-        <div id="adminUserList" class="list-group"></div>
-        <button id="adminResetBtn" class="btn btn-outline-danger btn-sm mt-3">
-          <span class="btn-original-content"><i class="fas fa-trash-alt"></i> Réinitialiser tout</span>
-          <span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span> Chargement...</span>
-        </button>
+        <div class="row g-2 mb-3" id="adminStats">
+          <div class="col-4"><div class="admin-stat"><div class="num" id="statUsers">0</div><div class="lbl">Utilisateurs</div></div></div>
+          <div class="col-4"><div class="admin-stat"><div class="num" id="statPosts">0</div><div class="lbl">Sujets</div></div></div>
+          <div class="col-4"><div class="admin-stat"><div class="num" id="statReplies">0</div><div class="lbl">Réponses</div></div></div>
+        </div>
+        <hr>
+        <p class="text-muted small mb-2"><i class="fas fa-users me-1"></i>Gestion des utilisateurs</p>
+        <div id="adminUserList" class="list-group mb-3"></div>
+        <hr>
+        <p class="text-muted small mb-2"><i class="fas fa-trash-alt me-1"></i>Actions globales</p>
+        <div class="d-flex gap-2 flex-wrap">
+          <button id="adminResetBtn" class="btn btn-outline-danger btn-sm">
+            <span class="btn-original-content"><i class="fas fa-trash-alt"></i> Réinitialiser tout le forum</span>
+            <span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span> Chargement...</span>
+          </button>
+          <button id="adminRefreshBtn" class="btn btn-outline-kacm btn-sm"><i class="fas fa-sync-alt"></i> Actualiser</button>
+        </div>
       </div>
     </div>
   </div>
@@ -233,9 +248,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 (function(){
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
+  const API_URL='https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
   const MAX_TITLE=50,MAX_CONTENT=500,MAX_REPLY=250,ADMIN_PASS='Seddik';
+  const REPLIES_STEP=3; // Combien de réponses on ajoute/retire à chaque clic
+
   let currentUser=null,posts=[],isLoginMode=true;
+  // Stocke l'état d'expansion pour chaque post: nombre de réponses visibles
+  // Valeur initiale = 1 (première réponse seulement)
+  let visibleRepliesCount={};
+  let adminUsersCache=[];
 
   const $=id=>document.getElementById(id);
   const landingPage=$('landingPage'),forumPage=$('forumPage'),postsList=$('postsList');
@@ -264,7 +285,7 @@
   const isLoggedIn=()=>currentUser!==null,isAdmin=()=>currentUser?.isAdmin===true;
   function showToast(icon,title,text){Swal.fire({icon,title,text,timer:2500,showConfirmButton:false,position:'top-end'});}
   function isArabic(t){return t&&/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(t);}
-  function getDir(t){return isArabic(t)?'rtl':'ltr';}
+  function getTextClass(t){return isArabic(t)?'text-rtl':'text-ltr';}
   function getReplyAuthor(id,post){const r=post?.replies?.find(x=>x.id===id);return r?r.authorName:null;}
   function updateCounter(inp,el,max){const l=inp.value.length;el.textContent=l;el.parentElement.classList.toggle('over-limit',l>max);el.style.color=l>max?'#dc3545':'';if(l>max)inp.value=inp.value.substring(0,max);}
   function showPages(){landingPage.classList.toggle('hidden',isLoggedIn());forumPage.classList.toggle('hidden',!isLoggedIn());}
@@ -277,36 +298,81 @@
     else postsList.innerHTML=`<div class="text-center text-muted py-5"><i class="fas fa-exclamation-triangle fa-2x mb-2"></i><p>${res.message||'Erreur'}</p><button class="btn btn-outline-kacm btn-sm" onclick="location.reload()">Réessayer</button></div>`;
   }
 
+  // === RENDER AVEC TOGGLE AFFICHER PLUS / MOINS ===
   function renderPosts(){
     if(!posts.length){postsList.innerHTML='<div class="text-center text-muted py-5"><i class="fas fa-comment-slash fa-2x mb-2"></i><p>Aucun sujet</p></div>';return;}
     let html='';
     posts.slice().reverse().forEach(p=>{
-      const isAuth=isLoggedIn()&&currentUser.id===p.authorId,isAdm=isAdmin();
-      const tD=getDir(p.title),cD=getDir(p.content);
-      const tRtl=tD==='rtl'?'rtl-text':'',cRtl=cD==='rtl'?'rtl-text':'';
+      const isAuth=isLoggedIn()&&currentUser.id===p.authorId;
+      const isAdm=isAdmin();
+      const canDeletePost=isAuth||isAdm;
+      const tCls=getTextClass(p.title),cCls=getTextClass(p.content);
+
+      // Initialiser: par défaut = 1 réponse visible
+      if(visibleRepliesCount[p.id]===undefined) visibleRepliesCount[p.id]=1;
+
       let rep='';
-      if(p.replies?.length){
-        const mains=p.replies.filter(r=>!r.replyTo),subs=p.replies.filter(r=>r.replyTo);
-        mains.forEach(mr=>{
-          const mD=getDir(mr.text),mRtl=mD==='rtl'?'rtl-text':'';
-          rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text ${mRtl}" style="direction:${mD}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${(isLoggedIn()&&(currentUser.id===mr.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sD=getDir(s.text),sRtl=sD==='rtl'?'rtl-text':'';return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text ${sRtl}" style="direction:${sD}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${(isLoggedIn()&&(currentUser.id===s.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;
+      const allMainReplies=p.replies?.filter(r=>!r.replyTo)||[];
+      const subs=p.replies?.filter(r=>r.replyTo)||[];
+      const totalMain=allMainReplies.length;
+      const currentVisible=Math.min(visibleRepliesCount[p.id],totalMain);
+      const isExpanded=currentVisible>=totalMain && totalMain>1;
+      const hasMore=currentVisible<totalMain;
+
+      if(totalMain>0){
+        allMainReplies.slice(0,currentVisible).forEach(mr=>{
+          const mCls=getTextClass(mr.text);
+          const canDeleteReply=isLoggedIn()&&(currentUser.id===mr.authorId||isAdm);
+          rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text ${mCls}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${canDeleteReply?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}" title="Supprimer"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sCls=getTextClass(s.text);const canDeleteSub=isLoggedIn()&&(currentUser.id===s.authorId||isAdm);return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text ${sCls}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${canDeleteSub?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}" title="Supprimer"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;
         });
-      }else rep='<div class="text-muted small">Aucune réponse</div>';
-      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${(isAuth||isAdm)?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title ${tRtl}" style="direction:${tD}">${p.title}</div><div class="post-content ${cRtl}" style="direction:${cD}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
+
+        // Bouton TOGGLE: Afficher plus / Afficher moins
+        if(totalMain>1){
+          if(hasMore){
+            const remaining=totalMain-currentVisible;
+            rep+=`<button class="toggle-replies-btn" data-pid="${p.id}" data-action="more">
+              Afficher plus (${remaining} restantes) <i class="fas fa-chevron-down"></i>
+            </button>`;
+          } else if(isExpanded){
+            rep+=`<button class="toggle-replies-btn expanded" data-pid="${p.id}" data-action="less">
+              Afficher moins <i class="fas fa-chevron-up"></i>
+            </button>`;
+          }
+        }
+      }else{
+        rep='<div class="text-muted small">Aucune réponse</div>';
+      }
+
+      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${canDeletePost?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}" title="Supprimer le sujet"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title ${tCls}">${p.title}</div><div class="post-content ${cCls}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
     });
     postsList.innerHTML=html;
     attachEvents();
   }
 
   function attachEvents(){
-    document.querySelectorAll('.del-post-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'deletePost',postId:this.dataset.pid},this);loadForumData();showToast('info','Supprimé');}});
-    document.querySelectorAll('.del-reply-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer réponse?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'deleteReply',postId:this.dataset.pid,replyId:this.dataset.rid},this);loadForumData();showToast('info','Supprimée');}});
+    // === TOGGLE AFFICHER PLUS / MOINS ===
+    document.querySelectorAll('.toggle-replies-btn').forEach(b=>b.onclick=function(){
+      const pid=this.dataset.pid;
+      const action=this.dataset.action;
+      if(action==='more'){
+        // Ajouter REPLIES_STEP réponses
+        visibleRepliesCount[pid]=(visibleRepliesCount[pid]||1)+REPLIES_STEP;
+      } else {
+        // Retourner à 1 réponse (réinitialiser)
+        visibleRepliesCount[pid]=1;
+      }
+      renderPosts();
+    });
+
+    document.querySelectorAll('.del-post-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer ce sujet ?',text:'Irréversible',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C',confirmButtonText:'Oui, supprimer'})).isConfirmed){await api({action:'deletePost',postId:this.dataset.pid},this);loadForumData();showToast('info','Supprimé');}});
+    document.querySelectorAll('.del-reply-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer cette réponse ?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C',confirmButtonText:'Oui'})).isConfirmed){await api({action:'deleteReply',postId:this.dataset.pid,replyId:this.dataset.rid},this);loadForumData();showToast('info','Supprimée');}});
     document.querySelectorAll('.reply-toggle-btn').forEach(b=>b.onclick=function(){const f=$(`rf-${this.dataset.pid}`);if(f){f.classList.toggle('hidden');const i=f.querySelector('.reply-input');if(i){delete i.dataset.replyto;i.placeholder='Réponse (max 250)...';i.value='';}f.querySelector('.reply-ctx').innerHTML='';f.querySelector('.reply-ctr').textContent='0';}});
     document.querySelectorAll('.submit-reply-btn').forEach(b=>b.onclick=async function(){const pid=this.dataset.pid,f=$(`rf-${pid}`),inp=f.querySelector('.reply-input');if(inp?.value.trim()){if(inp.value.length>MAX_REPLY){showToast('warning','Trop long');return;}await api({action:'addReply',postId:pid,authorId:currentUser.id,authorName:currentUser.name,text:inp.value.trim(),replyTo:inp.dataset.replyto||null},this);f.classList.add('hidden');inp.value='';loadForumData();showToast('success','Réponse ajoutée');}});
     document.querySelectorAll('.reply-input').forEach(i=>{const ctr=i.closest('.reply-form-wrapper')?.querySelector('.reply-ctr');i.oninput=function(){if(ctr){ctr.textContent=this.value.length;ctr.style.color=this.value.length>MAX_REPLY?'#dc3545':'';}if(this.value.length>MAX_REPLY)this.value=this.value.substring(0,MAX_REPLY);};i.onkeypress=function(e){if(e.key==='Enter'){e.preventDefault();this.closest('.reply-form-wrapper').querySelector('.submit-reply-btn').click();}};});
     document.querySelectorAll('.replay-btn').forEach(b=>b.onclick=function(e){e.stopPropagation();const pid=this.dataset.pid,rid=this.dataset.rid,rn=this.dataset.rn,f=$(`rf-${pid}`);if(f){f.classList.remove('hidden');f.querySelector('.reply-ctx').innerHTML=`<i class="fas fa-reply-all kacm-red"></i> À <strong>${rn}</strong>`;const inp=f.querySelector('.reply-input');if(inp){inp.dataset.replyto=rid;inp.placeholder=`Répondre à ${rn}...`;inp.focus();inp.value='';}f.querySelector('.reply-ctr').textContent='0';}});
   }
 
+  // === AUTH ===
   function openAuth(mode){
     closeAllModals();authForm.reset();isLoginMode=mode==='login';
     authModalLabel.innerHTML=isLoginMode?'<i class="fas fa-sign-in-alt kacm-red me-2"></i>Connexion':'<i class="fas fa-user-plus kacm-red me-2"></i>Inscription';
@@ -363,22 +429,45 @@
     },800);
   };
 
-  $('adminAccessBtn').onclick=async function(){
-    if(isAdmin()){const r=await api({action:'adminGetUsers',password:ADMIN_PASS},this);if(r.success)renderAdmin(r.users);adminModal.show();return;}
-    const res=await Swal.fire({title:'Accès Admin',input:'password',showCancelButton:true,confirmButtonText:'Valider'});
-    if(res.isConfirmed&&res.value===ADMIN_PASS){
-      currentUser={id:'admin',name:'Admin KACM',isAdmin:true};updateUI();
-      const r=await api({action:'adminGetUsers',password:ADMIN_PASS},this);if(r.success)renderAdmin(r.users);
-      adminModal.show();showToast('success','Bienvenue Admin');
-    }else if(res.isConfirmed)showToast('error','Mot de passe incorrect');
-  };
-
-  function renderAdmin(users){
-    adminUserList.innerHTML=(users||[]).map(u=>`<div class="list-group-item d-flex justify-content-between align-items-center"><div><i class="fas fa-user-circle kacm-red me-2"></i>${u.name} ${u.isAdmin?'<span class="badge bg-warning text-dark">Admin</span>':''}</div><div>${!u.isAdmin?`<button class="btn btn-sm btn-outline-danger block-btn" data-uid="${u.id}"><span class="btn-original-content"><i class="fas fa-ban"></i> Bloquer</span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button>`:''}</div></div>`).join('')||'<p class="text-muted">Aucun utilisateur</p>';
-    document.querySelectorAll('.block-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Bloquer?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'adminBlockUser',userId:this.dataset.uid,password:ADMIN_PASS},this);const r=await api({action:'adminGetUsers',password:ADMIN_PASS});if(r.success)renderAdmin(r.users);showToast('info','Bloqué');}});
+  // === ADMIN PANEL ===
+  async function loadAdminPanel(btn){
+    const usersRes=await api({action:'adminGetUsers',password:ADMIN_PASS},btn);
+    if(!usersRes.success){showToast('error','Erreur',usersRes.message||'Impossible de charger');return;}
+    adminUsersCache=usersRes.users||[];
+    const forumRes=await api({action:'getForumData'});
+    let totalPosts=0,totalReplies=0;
+    if(forumRes.success&&forumRes.posts){totalPosts=forumRes.posts.length;forumRes.posts.forEach(p=>{totalReplies+=(p.replies?.length||0);});}
+    $('statUsers').textContent=adminUsersCache.length;
+    $('statPosts').textContent=totalPosts;
+    $('statReplies').textContent=totalReplies;
+    renderAdminUsers();
   }
 
-  adminResetBtn.onclick=async function(){if((await Swal.fire({title:'Tout réinitialiser?',icon:'error',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'adminReset',password:ADMIN_PASS},this);loadForumData();const r=await api({action:'adminGetUsers',password:ADMIN_PASS});if(r.success)renderAdmin(r.users);showToast('info','Réinitialisé');}};
+  function renderAdminUsers(){
+    if(!adminUsersCache.length){adminUserList.innerHTML='<p class="text-muted text-center py-2">Aucun utilisateur</p>';return;}
+    adminUserList.innerHTML=adminUsersCache.map(u=>`<div class="list-group-item d-flex justify-content-between align-items-center"><div><i class="fas fa-user-circle kacm-red me-2"></i><strong>${u.name}</strong> ${u.isAdmin?'<span class="badge bg-warning text-dark ms-1"><i class="fas fa-crown"></i> Admin</span>':''}</div><div>${!u.isAdmin?`<button class="btn btn-sm btn-outline-danger block-btn" data-uid="${u.id}" data-uname="${u.name}"><span class="btn-original-content"><i class="fas fa-ban"></i> Bloquer</span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button>`:''}</div></div>`).join('');
+    document.querySelectorAll('.block-btn').forEach(b=>b.onclick=async function(){
+      const uid=this.dataset.uid,uname=this.dataset.uname;
+      if((await Swal.fire({title:`Bloquer ${uname} ?`,text:'Suppression définitive du compte et tout son contenu',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C',confirmButtonText:'Bloquer'})).isConfirmed){
+        await api({action:'adminBlockUser',userId:uid,password:ADMIN_PASS},this);
+        showToast('info','Bloqué',`${uname} supprimé`);
+        await loadAdminPanel(null);loadForumData();
+      }
+    });
+  }
+
+  $('adminAccessBtn').onclick=async function(){
+    const result=await Swal.fire({title:'Accès Admin',input:'password',inputPlaceholder:'Mot de passe admin',showCancelButton:true,confirmButtonText:'Valider',cancelButtonText:'Annuler',confirmButtonColor:'#DA291C'});
+    if(result.isConfirmed){
+      if(result.value===ADMIN_PASS){
+        currentUser={id:'admin-session',name:'Admin KACM',isAdmin:true};updateUI();
+        await loadAdminPanel(this);adminModal.show();showToast('success','Bienvenue Admin');
+      }else showToast('error','Mot de passe incorrect');
+    }
+  };
+
+  adminResetBtn.onclick=async function(){if((await Swal.fire({title:'⚠️ TOUT RÉINITIALISER ?',text:'Tous les sujets et réponses supprimés',icon:'error',showCancelButton:true,confirmButtonColor:'#DA291C',confirmButtonText:'Oui, tout supprimer'})).isConfirmed){await api({action:'adminReset',password:ADMIN_PASS},this);showToast('info','Réinitialisé');await loadAdminPanel(null);loadForumData();}};
+  $('adminRefreshBtn').onclick=async function(){await loadAdminPanel(this);loadForumData();showToast('success','Actualisé');};
 
   document.querySelectorAll('.modal').forEach(m=>m.addEventListener('hidden.bs.modal',()=>{document.querySelectorAll('.modal-backdrop').forEach(b=>b.remove());document.body.classList.remove('modal-open');}));
 
