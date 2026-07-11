@@ -35,18 +35,44 @@
     .reply-actions{display:flex;gap:8px;align-items:center}.reply-actions button{padding:0 6px;font-size:.75rem}
     .btn-reply-to{background:transparent;border:none;color:#DA291C;font-size:.75rem;padding:0 4px}.btn-reply-to:hover{text-decoration:underline}
     .reply-indent{margin-left:20px;border-left:2px dashed #ddd;padding-left:12px}
-    .post-content,.reply-text,.post-title{white-space:pre-wrap!important;word-wrap:break-word!important;overflow-wrap:break-word!important;line-height:1.6;max-width:100%}
-    .post-content{margin-top:6px;margin-bottom:8px}.reply-text{margin-top:4px}.post-title{font-weight:700;margin-top:4px;margin-bottom:2px}
+    
+    /* === TEXTE JUSTIFIÉ POUR POSTS & RÉPONSES === */
+    .post-content, .reply-text, .post-title {
+      white-space: pre-wrap !important;
+      word-wrap: break-word !important;
+      overflow-wrap: break-word !important;
+      line-height: 1.7;
+      max-width: 100%;
+      text-align: justify !important;
+      text-align-last: left;
+    }
+    /* Pour le RTL, text-align-last reste à droite naturellement */
+    [dir="rtl"] .post-content, [dir="rtl"] .reply-text, [dir="rtl"] .post-title,
+    .post-content.rtl-text, .reply-text.rtl-text, .post-title.rtl-text {
+      text-align-last: right;
+    }
+    
+    .post-content{margin-top:6px;margin-bottom:8px}
+    .reply-text{margin-top:4px}
+    .post-title{font-weight:700;margin-top:4px;margin-bottom:2px}
     .auto-rtl{unicode-bidi:plaintext}
     textarea,input[type="text"],input[type="password"]{direction:auto;unicode-bidi:plaintext}
     .char-counter{font-size:.75rem;color:#6c757d;margin-top:4px;text-align:right}
     .char-counter.over-limit{color:#dc3545;font-weight:bold}.char-counter .current{font-weight:bold}.char-counter .max{color:#6c757d}
-    /* Loading state for buttons */
+    
+    /* Loading state */
     button.btn-loading{pointer-events:none;opacity:.75}
     button.btn-loading .btn-original-content{display:none}
     button.btn-loading .btn-loading-content{display:inline-flex!important}
     .btn-loading-content{display:none!important;align-items:center;gap:6px}
-    @media(max-width:576px){.page-content{margin-bottom:80px}.footer p{font-size:.75rem}.hero-image{width:90px;height:90px;padding:6px}}
+    
+    @media(max-width:576px){
+      .page-content{margin-bottom:80px}
+      .footer p{font-size:.75rem}
+      .hero-image{width:90px;height:90px;padding:6px}
+      /* Sur très petit écran, on évite le justify pour les textes courts */
+      .reply-text{text-align:left!important}
+    }
   </style>
 </head>
 <body>
@@ -101,7 +127,7 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.0</p>
+    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.1</p>
   </div>
 </footer>
 
@@ -216,55 +242,37 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 (function(){
-  // ⚠️ REMPLACEZ PAR VOTRE URL GOOGLE APPS SCRIPT
   const API_URL = 'https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
-  const MAX_TITLE = 50, MAX_CONTENT = 500, MAX_REPLY = 250, ADMIN_PASS = 'Seddik';
+  const MAX_TITLE=50, MAX_CONTENT=500, MAX_REPLY=250, ADMIN_PASS='Seddik';
+  let currentUser=null, posts=[], isLoginMode=true;
 
-  let currentUser = null, posts = [], isLoginMode = true;
+  const $=id=>document.getElementById(id);
+  const landingPage=$('landingPage'),forumPage=$('forumPage'),postsList=$('postsList');
+  const navUsername=$('navUsername'),userDisplay=$('userDisplay'),logoutBtn=$('logoutBtn'),loginNavBtn=$('loginNavBtn');
+  const authModal=new bootstrap.Modal($('authModal')),authForm=$('authForm'),authSubmitBtn=$('authSubmitBtn');
+  const toggleAuthText=$('toggleAuthText'),authModalLabel=$('authModalLabel'),authName=$('authName'),authPassword=$('authPassword');
+  const postModal=new bootstrap.Modal($('postModal')),postForm=$('postForm');
+  const postTitle=$('postTitle'),postContent=$('postContent'),titleCounter=$('titleCounter'),contentCounter=$('contentCounter');
+  const recModal=new bootstrap.Modal($('reclamationModal')),recForm=$('reclamationForm'),recMsgCounter=$('recMsgCounter');
+  const adminModal=new bootstrap.Modal($('adminModal')),adminUserList=$('adminUserList'),adminResetBtn=$('adminResetBtn');
 
-  // DOM
-  const $ = id => document.getElementById(id);
-  const landingPage=$('landingPage'), forumPage=$('forumPage'), postsList=$('postsList');
-  const navUsername=$('navUsername'), userDisplay=$('userDisplay'), logoutBtn=$('logoutBtn'), loginNavBtn=$('loginNavBtn');
-  const authModal=new bootstrap.Modal($('authModal')), authForm=$('authForm'), authSubmitBtn=$('authSubmitBtn');
-  const toggleAuthLink=$('toggleAuthLink'), toggleAuthText=$('toggleAuthText');
-  const authModalLabel=$('authModalLabel'), authName=$('authName'), authPassword=$('authPassword');
-  const postModal=new bootstrap.Modal($('postModal')), postForm=$('postForm');
-  const postTitle=$('postTitle'), postContent=$('postContent'), titleCounter=$('titleCounter'), contentCounter=$('contentCounter');
-  const recModal=new bootstrap.Modal($('reclamationModal')), recForm=$('reclamationForm'), recMsgCounter=$('recMsgCounter');
-  const adminModal=new bootstrap.Modal($('adminModal')), adminUserList=$('adminUserList'), adminResetBtn=$('adminResetBtn');
-
-  // Logo fallback
   $('kacmLogo')?.addEventListener('error',function(){this.style.display='none';const d=document.createElement('div');d.innerHTML='<i class="fas fa-shield-alt" style="font-size:4rem;color:#DA291C"></i>';this.parentNode.appendChild(d);});
 
-  // ===================== SHOW LOADING =====================
-  function showLoading(btn, loading) {
-    if (!btn) return;
-    if (loading) {
-      btn.classList.add('btn-loading');
-      btn.disabled = true;
-    } else {
-      btn.classList.remove('btn-loading');
-      btn.disabled = false;
-    }
+  // === SHOW LOADING ===
+  function showLoading(btn,loading){if(!btn)return;if(loading){btn.classList.add('btn-loading');btn.disabled=true;}else{btn.classList.remove('btn-loading');btn.disabled=false;}}
+
+  // === API ===
+  async function api(payload,btn){
+    showLoading(btn,true);
+    try{
+      const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+      const text=await res.text();
+      try{return JSON.parse(text);}catch(e){return(res.ok||res.status===0)?{success:true}:{success:false,message:'Réponse invalide'};}
+    }catch(err){return{success:false,message:'Impossible de joindre le serveur'};}
+    finally{showLoading(btn,false);}
   }
 
-  // ===================== API =====================
-  async function api(payload, btn) {
-    showLoading(btn, true);
-    try {
-      const res = await fetch(API_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)});
-      const text = await res.text();
-      try { return JSON.parse(text); }
-      catch(e) { return (res.ok||res.status===0)?{success:true}:{success:false,message:'Réponse invalide'}; }
-    } catch(err) {
-      return {success:false, message:'Impossible de joindre le serveur'};
-    } finally {
-      showLoading(btn, false);
-    }
-  }
-
-  // ===================== HELPERS =====================
+  // === HELPERS ===
   const isLoggedIn=()=>currentUser!==null, isAdmin=()=>currentUser?.isAdmin===true;
   function showToast(icon,title,text){Swal.fire({icon,title,text,timer:2500,showConfirmButton:false,position:'top-end'});}
   function isArabic(t){return t&&/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(t);}
@@ -274,7 +282,7 @@
   function showPages(){landingPage.classList.toggle('hidden',isLoggedIn());forumPage.classList.toggle('hidden',!isLoggedIn());}
   function closeAllModals(){document.querySelectorAll('.modal.show').forEach(m=>bootstrap.Modal.getInstance(m)?.hide());document.querySelectorAll('.modal-backdrop').forEach(b=>b.remove());document.body.classList.remove('modal-open');}
 
-  // ===================== LOAD DATA =====================
+  // === LOAD DATA ===
   async function loadForumData(){
     postsList.innerHTML='<div class="text-center py-5"><div class="spinner-border kacm-red"></div><p class="mt-2 text-muted">Chargement...</p></div>';
     const res=await api({action:'getForumData'});
@@ -282,19 +290,25 @@
     else postsList.innerHTML=`<div class="text-center text-muted py-5"><i class="fas fa-exclamation-triangle fa-2x mb-2"></i><p>${res.message||'Erreur'}</p><button class="btn btn-outline-kacm btn-sm" onclick="location.reload()">Réessayer</button></div>`;
   }
 
-  // ===================== RENDER =====================
+  // === RENDER POSTS (avec texte justifié via CSS + classe rtl-text si arabe) ===
   function renderPosts(){
     if(!posts.length){postsList.innerHTML='<div class="text-center text-muted py-5"><i class="fas fa-comment-slash fa-2x mb-2"></i><p>Aucun sujet</p></div>';return;}
     let html='';
     posts.slice().reverse().forEach(p=>{
-      const isAuth=isLoggedIn()&&currentUser.id===p.authorId, isAdm=isAdmin(), tD=getDir(p.title), cD=getDir(p.content);
+      const isAuth=isLoggedIn()&&currentUser.id===p.authorId,isAdm=isAdmin();
+      const tD=getDir(p.title),cD=getDir(p.content);
+      const tRtl=tD==='rtl'?'rtl-text':'', cRtl=cD==='rtl'?'rtl-text':'';
+
       let rep='';
       if(p.replies?.length){
-        const mains=p.replies.filter(r=>!r.replyTo), subs=p.replies.filter(r=>r.replyTo);
-        mains.forEach(mr=>{const mD=getDir(mr.text);rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text auto-rtl" style="direction:${mD};text-align:${mD==='rtl'?'right':'left'}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${(isLoggedIn()&&(currentUser.id===mr.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sD=getDir(s.text);return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text auto-rtl" style="direction:${sD};text-align:${sD==='rtl'?'right':'left'}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${(isLoggedIn()&&(currentUser.id===s.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;});
+        const mains=p.replies.filter(r=>!r.replyTo),subs=p.replies.filter(r=>r.replyTo);
+        mains.forEach(mr=>{
+          const mD=getDir(mr.text),mRtl=mD==='rtl'?'rtl-text':'';
+          rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text ${mRtl}" style="direction:${mD}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${(isLoggedIn()&&(currentUser.id===mr.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sD=getDir(s.text),sRtl=sD==='rtl'?'rtl-text':'';return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text ${sRtl}" style="direction:${sD}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${(isLoggedIn()&&(currentUser.id===s.authorId||isAdm))?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;
+        });
       }else rep='<div class="text-muted small">Aucune réponse</div>';
 
-      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${(isAuth||isAdm)?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title auto-rtl" style="direction:${tD};text-align:${tD==='rtl'?'right':'left'}">${p.title}</div><div class="post-content auto-rtl" style="direction:${cD};text-align:${cD==='rtl'?'right':'left'}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
+      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${(isAuth||isAdm)?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title ${tRtl}" style="direction:${tD}">${p.title}</div><div class="post-content ${cRtl}" style="direction:${cD}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
     });
     postsList.innerHTML=html;
     attachEvents();
@@ -309,7 +323,7 @@
     document.querySelectorAll('.replay-btn').forEach(b=>b.onclick=function(e){e.stopPropagation();const pid=this.dataset.pid,rid=this.dataset.rid,rn=this.dataset.rn,f=$(`rf-${pid}`);if(f){f.classList.remove('hidden');f.querySelector('.reply-ctx').innerHTML=`<i class="fas fa-reply-all kacm-red"></i> À <strong>${rn}</strong>`;const inp=f.querySelector('.reply-input');if(inp){inp.dataset.replyto=rid;inp.placeholder=`Répondre à ${rn}...`;inp.focus();inp.value='';}f.querySelector('.reply-ctr').textContent='0';}});
   }
 
-  // ===================== AUTH =====================
+  // === AUTH ===
   function openAuth(mode){
     closeAllModals();authForm.reset();isLoginMode=mode==='login';
     authModalLabel.innerHTML=isLoginMode?'<i class="fas fa-sign-in-alt kacm-red me-2"></i>Connexion':'<i class="fas fa-user-plus kacm-red me-2"></i>Inscription';
@@ -323,12 +337,9 @@
     e.preventDefault();
     const name=authName.value.trim(),pass=authPassword.value.trim();
     if(!name||!pass){showToast('warning','Champs requis','Nom et mot de passe obligatoires');return;}
-    const action=isLoginMode?'login':'register';
-    const res=await api({action,name,password:pass},authSubmitBtn);
-    if(res.success){
-      currentUser=res.user;updateUI();authModal.hide();loadForumData();
-      showToast('success',isLoginMode?'Bonjour '+currentUser.name:'Bienvenue '+currentUser.name);
-    }else showToast('error','Erreur',res.message||'Échec');
+    const res=await api({action:isLoginMode?'login':'register',name,password:pass},authSubmitBtn);
+    if(res.success){currentUser=res.user;updateUI();authModal.hide();loadForumData();showToast('success',isLoginMode?'Bonjour '+currentUser.name:'Bienvenue '+currentUser.name);}
+    else showToast('error','Erreur',res.message||'Échec');
   };
 
   function updateUI(){
@@ -342,23 +353,22 @@
   $('showRegisterBtn').onclick=()=>openAuth('register');
   loginNavBtn.onclick=()=>openAuth('login');
 
-  // ===================== NEW POST =====================
+  // === NEW POST ===
   $('newPostBtn').onclick=()=>{if(!isLoggedIn()){showToast('warning','Connectez-vous');return;}postForm.reset();titleCounter.textContent='0';contentCounter.textContent='0';postModal.show();};
   postForm.onsubmit=async function(e){
     e.preventDefault();const t=postTitle.value.trim(),c=postContent.value.trim();
     if(!t||!c){showToast('warning','Champs vides');return;}
     if(t.length>MAX_TITLE||c.length>MAX_CONTENT){showToast('warning','Trop long');return;}
     const res=await api({action:'addPost',authorId:currentUser.id,authorName:currentUser.name,title:t,content:c},$('postSubmitBtn'));
-    if(res.success){postModal.hide();loadForumData();showToast('success','Sujet publié');}
-    else showToast('error','Erreur',res.message);
+    if(res.success){postModal.hide();loadForumData();showToast('success','Sujet publié');}else showToast('error','Erreur',res.message);
   };
 
-  // ===================== COUNTERS =====================
+  // === COUNTERS ===
   postTitle.oninput=()=>updateCounter(postTitle,titleCounter,MAX_TITLE);
   postContent.oninput=()=>updateCounter(postContent,contentCounter,MAX_CONTENT);
   $('recMessage').oninput=function(){updateCounter(this,recMsgCounter,MAX_CONTENT);};
 
-  // ===================== RECLAMATION =====================
+  // === RECLAMATION ===
   $('reclamationBtn').onclick=()=>{recForm.reset();recMsgCounter.textContent='0';recModal.show();};
   recForm.onsubmit=function(e){
     e.preventDefault();
@@ -373,7 +383,7 @@
     },800);
   };
 
-  // ===================== ADMIN =====================
+  // === ADMIN ===
   $('adminAccessBtn').onclick=async function(){
     if(isAdmin()){const r=await api({action:'adminGetUsers',password:ADMIN_PASS},this);if(r.success)renderAdmin(r.users);adminModal.show();return;}
     const res=await Swal.fire({title:'Accès Admin',input:'password',showCancelButton:true,confirmButtonText:'Valider'});
@@ -391,10 +401,8 @@
 
   adminResetBtn.onclick=async function(){if((await Swal.fire({title:'Tout réinitialiser?',icon:'error',showCancelButton:true,confirmButtonColor:'#DA291C'})).isConfirmed){await api({action:'adminReset',password:ADMIN_PASS},this);loadForumData();const r=await api({action:'adminGetUsers',password:ADMIN_PASS});if(r.success)renderAdmin(r.users);showToast('info','Réinitialisé');}};
 
-  // Modal cleanup
   document.querySelectorAll('.modal').forEach(m=>m.addEventListener('hidden.bs.modal',()=>{document.querySelectorAll('.modal-backdrop').forEach(b=>b.remove());document.body.classList.remove('modal-open');}));
 
-  // INIT
   updateUI();
 })();
 </script>
