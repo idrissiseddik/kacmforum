@@ -382,7 +382,7 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container py-1">
-    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M. Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Forum <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.9</p>
+    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M. Seddik ELidrissi</span>[cite: 1] <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Forum[cite: 1] <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.9[cite: 1]</p>
   </div>
 </footer>
 
@@ -428,14 +428,14 @@
       <div class="modal-body">
         <form id="postForm" novalidate>
           <div class="mb-3">
-            <label class="form-label">Titre (max 50)</label>
-            <input type="text" id="postTitle" class="form-control" required maxlength="50">
-            <div class="char-counter"><span class="current" id="titleCounter">0</span><span class="max">/ 50</span></div>
+            <label class="form-label">Titre (max 150)</label>
+            <input type="text" id="postTitle" class="form-control" required maxlength="150">
+            <div class="char-counter"><span class="current" id="titleCounter">0</span><span class="max">/ 150</span></div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Contenu (max 500)</label>
-            <textarea id="postContent" class="form-control" rows="4" required maxlength="500"></textarea>
-            <div class="char-counter"><span class="current" id="contentCounter">0</span><span class="max">/ 500</span></div>
+            <label class="form-label">Contenu (max 1000)</label>
+            <textarea id="postContent" class="form-control" rows="4" required maxlength="1000"></textarea>
+            <div class="char-counter"><span class="current" id="contentCounter">0</span><span class="max">/ 1000</span></div>
           </div>
           <button type="submit" class="btn btn-kacm w-100" id="postSubmitBtn">
             <span class="btn-original-content"><i class="fas fa-paper-plane me-1"></i>Publier</span>
@@ -460,9 +460,9 @@
           <div class="mb-3"><input type="text" id="recName" class="form-control" placeholder="Nom complet" required></div>
           <div class="mb-3"><input type="tel" id="recPhone" class="form-control" placeholder="Téléphone" required></div>
           <div class="mb-3">
-            <label class="form-label">Message (max 500)</label>
-            <textarea id="recMessage" class="form-control" rows="4" required maxlength="500"></textarea>
-            <div class="char-counter"><span class="current" id="recMsgCounter">0</span><span class="max">/ 500</span></div>
+            <label class="form-label">Message (max 1000)</label>
+            <textarea id="recMessage" class="form-control" rows="4" required maxlength="1000"></textarea>
+            <div class="char-counter"><span class="current" id="recMsgCounter">0</span><span class="max">/ 1000</span></div>
           </div>
           <button type="submit" class="btn whatsapp-btn w-100" id="recSubmitBtn">
             <span class="btn-original-content"><i class="fab fa-whatsapp me-2"></i>Envoyer</span>
@@ -509,7 +509,7 @@
 <script>
 (function(){
   const API_URL='https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
-  const MAX_TITLE=50,MAX_CONTENT=500,MAX_REPLY=250,ADMIN_PASS='Seddik';
+  const MAX_TITLE=150, MAX_CONTENT=1000, MAX_REPLY=500, ADMIN_PASS='Seddik';
   const REPLIES_STEP=3;
 
   let currentUser=null,posts=[],isLoginMode=true;
@@ -618,7 +618,7 @@
         rep='<div class="text-muted small">Aucune réponse</div>';
       }
 
-      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${canDeletePost?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}" title="Supprimer le sujet"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title ${tCls}">${p.title}</div><div class="post-content ${cCls}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 250)..." data-pid="${p.id}" maxlength="250"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/250</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
+      html+=`<div class="forum-card p-3 mb-3"><div class="d-flex justify-content-between"><div><span class="post-author"><i class="fas fa-user-circle"></i> ${p.authorName}</span> <span class="reply-badge"><i class="far fa-clock"></i> ${new Date(p.createdAt).toLocaleDateString()}</span></div><div>${canDeletePost?`<button class="btn btn-sm btn-outline-danger del-post-btn" data-pid="${p.id}" title="Supprimer le sujet"><i class="fas fa-trash-alt"></i></button>`:''}</div></div><div class="post-title ${tCls}">${p.title}</div><div class="post-content ${cCls}">${p.content}</div><div class="d-flex flex-wrap align-items-center gap-2 mb-2"><button class="btn btn-sm btn-outline-kacm reply-toggle-btn" data-pid="${p.id}"><i class="fas fa-reply"></i> Répondre</button><span class="badge bg-light text-dark"><i class="far fa-comment"></i> ${p.replies?.length||0}</span></div><div class="replies-container mt-2">${rep}</div><div class="reply-form-wrapper mt-2 hidden" id="rf-${p.id}"><div class="input-group input-group-sm"><input type="text" class="form-control reply-input" placeholder="Réponse (max 500)..." data-pid="${p.id}" maxlength="500"><button class="btn btn-kacm btn-sm submit-reply-btn" data-pid="${p.id}"><span class="btn-original-content"><i class="fas fa-paper-plane"></i></span><span class="btn-loading-content"><span class="spinner-border spinner-border-sm"></span></span></button></div><div class="char-counter" style="font-size:.7rem"><span class="current reply-ctr" data-pid="${p.id}">0</span>/500</div><div class="reply-ctx small text-muted mt-1"></div></div></div>`;
     });
     postsList.innerHTML=html;
     attachEvents();
@@ -638,7 +638,7 @@
 
     document.querySelectorAll('.del-post-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer ce sujet ?',text:'Irréversible',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C',confirmButtonText:'Oui, supprimer'})).isConfirmed){await api({action:'deletePost',postId:this.dataset.pid},this);loadForumData();showToast('info','Supprimé');}});
     document.querySelectorAll('.del-reply-btn').forEach(b=>b.onclick=async function(){if((await Swal.fire({title:'Supprimer cette réponse ?',icon:'warning',showCancelButton:true,confirmButtonColor:'#DA291C',confirmButtonText:'Oui'})).isConfirmed){await api({action:'deleteReply',postId:this.dataset.pid,replyId:this.dataset.rid},this);loadForumData();showToast('info','Supprimée');}});
-    document.querySelectorAll('.reply-toggle-btn').forEach(b=>b.onclick=function(){const f=$(`rf-${this.dataset.pid}`);if(f){f.classList.toggle('hidden');const i=f.querySelector('.reply-input');if(i){delete i.dataset.replyto;i.placeholder='Réponse (max 250)...';i.value='';}f.querySelector('.reply-ctx').innerHTML='';f.querySelector('.reply-ctr').textContent='0';}});
+    document.querySelectorAll('.reply-toggle-btn').forEach(b=>b.onclick=function(){const f=$(`rf-${this.dataset.pid}`);if(f){f.classList.toggle('hidden');const i=f.querySelector('.reply-input');if(i){delete i.dataset.replyto;i.placeholder='Réponse (max 500)...';i.value='';}f.querySelector('.reply-ctx').innerHTML='';f.querySelector('.reply-ctr').textContent='0';}});
     document.querySelectorAll('.submit-reply-btn').forEach(b=>b.onclick=async function(){const pid=this.dataset.pid,f=$(`rf-${pid}`),inp=f.querySelector('.reply-input');if(inp?.value.trim()){if(inp.value.length>MAX_REPLY){showToast('warning','Trop long');return;}await api({action:'addReply',postId:pid,authorId:currentUser.id,authorName:currentUser.name,text:inp.value.trim(),replyTo:inp.dataset.replyto||null},this);f.classList.add('hidden');inp.value='';loadForumData();showToast('success','Réponse ajoutée');}});
     document.querySelectorAll('.reply-input').forEach(i=>{const ctr=i.closest('.reply-form-wrapper')?.querySelector('.reply-ctr');i.oninput=function(){if(ctr){ctr.textContent=this.value.length;ctr.style.color=this.value.length>MAX_REPLY?'#dc3545':'';}if(this.value.length>MAX_REPLY)this.value=this.value.substring(0,MAX_REPLY);};i.onkeypress=function(e){if(e.key==='Enter'){e.preventDefault();this.closest('.reply-form-wrapper').querySelector('.submit-reply-btn').click();}};});
     document.querySelectorAll('.replay-btn').forEach(b=>b.onclick=function(e){e.stopPropagation();const pid=this.dataset.pid,rid=this.dataset.rid,rn=this.dataset.rn,f=$(`rf-${pid}`);if(f){f.classList.remove('hidden');f.querySelector('.reply-ctx').innerHTML=`<i class="fas fa-reply-all kacm-red"></i> À <strong>${rn}</strong>`;const inp=f.querySelector('.reply-input');if(inp){inp.dataset.replyto=rid;inp.placeholder=`Répondre à ${rn}...`;inp.focus();inp.value='';}f.querySelector('.reply-ctr').textContent='0';}});
