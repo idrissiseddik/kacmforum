@@ -27,69 +27,106 @@
     .reply-to-badge{font-size:.7rem;color:#e67e22;background:#fde8d0;padding:1px 10px;border-radius:20px;display:inline-block;margin-bottom:4px}
     .container{max-width:600px;padding-left:16px;padding-right:16px}
     .hidden{display:none!important}.pointer{cursor:pointer}
-    .page-content{margin-top:125px;flex:1 0 auto;transition:all .3s ease;padding-bottom:100px!important}
+    .page-content{margin-top:90px;flex:1 0 auto;transition:all .3s ease;padding-bottom:100px!important}
     .admin-badge{background:#DA291C;color:#fff;font-size:.7rem;padding:2px 10px;border-radius:20px;margin-left:6px}
     .modal-backdrop{z-index:1040!important}.modal{z-index:1050!important}.modal-backdrop.show{opacity:.5}.modal-open .modal{overflow-y:auto}
     
-    /* === FOOTER === */
+    /* === FOOTER IDENTIQUE === */
     .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #DA291C;padding:8px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
-    .footer p{margin:0;font-size:.8rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
+    .footer p{margin:0;font-size:.75rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
 
-    /* === SITES AMIS DE LA GAUCHE VERS LA DROITE === */
+    /* === SECTION SITES AMIS / PANNEAU PUBLICITAIRE ANIMÉ === */
     .friends-carousel-wrap {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      padding: 10px 15px;
+      margin-top: 10px;
+      margin-bottom: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .billboard-panel {
+      position: relative;
+      height: 42px;
+      overflow: hidden;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .billboard-slide {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .billboard-slide.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .friend-link {
+      display: inline-flex;
+      align-items: center;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      direction: rtl;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+      transition: color 0.2s;
+    }
+    .friend-link:hover {
+      color: #ffe6e4;
+      text-decoration: underline;
+    }
+    .friend-link i {
+      font-size: 0.5rem;
+      margin-left: 8px;
+      color: #25D366;
+    }
+
+    /* === MESSAGE DÉFILANT UNIQUE (MARQUEE) === */
+    .marquee-container {
       position: fixed;
       top: 61px;
       left: 0;
       width: 100%;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(5px);
+      background: #fff5f4;
+      border-bottom: 1px dashed #ffd6d0;
       overflow: hidden;
       white-space: nowrap;
       z-index: 1029;
-      padding: 5px 0;
-      border-bottom: 1px dashed #ffd6d0;
+      padding: 6px 0;
       box-shadow: 0 2px 5px rgba(0,0,0,.03);
     }
-    .friends-track {
+    .marquee-track {
       display: inline-block;
       white-space: nowrap;
-      animation: scrollFriendsLeftToRight 22s linear infinite;
+      animation: scrollMarqueeLeftRight 20s linear infinite;
+      color: #DA291C;
+      font-weight: 700;
+      font-size: 0.95rem;
+      direction: ltr;
     }
-    .friends-track:hover {
+    .marquee-track:hover {
       animation-play-state: paused;
     }
-    .friend-link {
+    .marquee-track span {
+      padding: 0 20px;
       display: inline-block;
-      color: #444;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0 25px;
-      direction: rtl;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .friend-link:hover {
-      color: #DA291C;
-      transform: scale(1.15) translateY(-2px);
-      text-shadow: 0 4px 8px rgba(218,41,28,0.2);
-    }
-    .friend-link i {
-      font-size: 0.65rem;
-      margin-left: 10px;
-      margin-right: 0;
-      color: #DA291C;
-      vertical-align: middle;
-      animation: pulseIcon 1.5s ease-in-out infinite;
     }
 
-    @keyframes scrollFriendsLeftToRight {
-      0% { transform: translateX(-50%); }
-      100% { transform: translateX(0); }
-    }
-    @keyframes pulseIcon {
-      0%, 100% { opacity: 0.4; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.3); }
+    @keyframes scrollMarqueeLeftRight {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100vw); }
     }
 
     .reply-actions{display:flex;gap:8px;align-items:center}.reply-actions button{padding:0 6px;font-size:.75rem}
@@ -122,7 +159,7 @@
     .admin-stat .num{font-size:1.5rem;font-weight:800;color:#DA291C}
     .admin-stat .lbl{font-size:.75rem;color:#666}
 
-    /* === MESSAGE DE BIENVENUE ANIMÉ (SANS CADRE) === */
+    /* === MESSAGE DE BIENVENUE ANIMÉ === */
     #welcomeOverlay {
       position: fixed;
       top: 0;
@@ -131,55 +168,93 @@
       height: 100%;
       background-color: rgba(218, 41, 28, 0.95);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
       z-index: 9999;
       animation: fadeInWelcome 0.5s ease-out forwards;
+      overflow-y: auto;
+      padding: 20px 10px;
     }
 
-    .welcome-box {
-      background: transparent;
-      border: none;
-      color: #fff;
-      padding: 2.5rem 2rem;
-      border-radius: 28px;
+    .welcome-main-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      max-width: 95%;
+      width: 500px;
       text-align: center;
-      max-width: 90%;
-      width: 400px;
-      box-shadow: none;
+      color: #fff;
       animation: scaleUpWelcome 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
-    .welcome-box h2 {
+    .welcome-box-footer {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .welcome-main-content h2 {
       font-weight: 800;
-      margin-bottom: 1rem;
+      margin-bottom: 0.3rem;
       color: #fff;
     }
 
-    .welcome-box p {
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      color: #f8f9fa;
+    .welcome-main-content .welcome-arabic-msg {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.2rem;
+      color: #fff;
+      direction: rtl;
     }
 
-    .welcome-box .hero-image {
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 15px;
+    .welcome-main-content .welcome-arabic-desc {
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+      color: #f8f9fa;
+      direction: rtl;
+      line-height: 1.6;
+    }
+
+    .welcome-main-content .welcome-fr-title {
+      font-weight: 800;
+      font-size: 1.25rem;
+      margin-top: 0.8rem;
+      margin-bottom: 0.2rem;
+      color: #fff;
+    }
+
+    .welcome-main-content .welcome-fr-desc {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      color: #fff;
+      line-height: 1.5;
+    }
+
+    .welcome-main-content .hero-image {
+      width: 95px;
+      height: 95px;
+      margin: 10px auto;
       border: 3px solid #fff;
     }
 
-    .welcome-box .btn-ok {
+    .welcome-main-content .btn-ok {
       background-color: #fff;
       color: #DA291C;
       font-weight: 700;
-      padding: 0.6rem 2rem;
+      padding: 0.5rem 2.5rem;
       border-radius: 50px;
       border: none;
       transition: all 0.2s ease;
+      margin-top: 10px;
     }
 
-    .welcome-box .btn-ok:hover {
+    .welcome-main-content .btn-ok:hover {
       background-color: #f1f1f1;
       transform: scale(1.05);
     }
@@ -204,9 +279,9 @@
     }
 
     @media(max-width:576px){
-      .page-content{padding-bottom:120px!important; margin-top:115px}
-      .friends-carousel-wrap{top:53px}
-      .footer p{font-size:.7rem}
+      .page-content{padding-bottom:120px!important; margin-top:95px}
+      .marquee-container{top:53px}
+      .footer p{font-size:.65rem}
       .hero-image{width:90px;height:90px;padding:6px}
       .forum-card{scroll-margin-bottom:140px}
     }
@@ -216,11 +291,37 @@
 
 <!-- MESSAGE DE BIENVENUE -->
 <div id="welcomeOverlay">
-  <div class="welcome-box">
+  <div class="welcome-main-content">
+    <div class="welcome-arabic-msg">مرحبا بكم في منتدى محبي ومشجعي نادي الكوكب الرياضي المراكشي</div>
+    <div class="welcome-arabic-desc">
+      نقطة التقاء مشجعي الكوكب المراكشي.<br>
+      عبر عن رأيك بكل احترام!
+    </div>
+    
     <img src="images/kacm.png" alt="KACM" class="hero-image">
-    <h2>Bienvenue sur KACM Forum</h2>
-    <p>Le point de ralliement des supporters du KACM.<br>Exprimez-vous dans le respect !</p>
+    
+    <div class="welcome-fr-title">Bienvenue sur KACM Forum</div>
+    <div class="welcome-fr-desc">Le point de ralliement des supporters du KACM.<br>Exprimez-vous dans le respect !</div>
+    
     <button id="closeWelcomeBtn" class="btn btn-ok">OK</button>
+  </div>
+  
+  <div class="welcome-box-footer">
+    <!-- SECTION SITES AMIS -->
+    <div class="friends-section-title text-center mt-2 mb-1">
+      <span class="fw-bold text-white" style="font-size: 0.85rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Sites Amis</span>
+    </div>
+    <div class="friends-carousel-wrap">
+      <div class="billboard-panel" id="billboardPanel">
+        <div class="billboard-slide active"><a href="https://wassitjob.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> منصة عرض و طلب العمل في المغرب</a></div>
+        <div class="billboard-slide"><a href="https://radiocoran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> راديو القرآن الكريم</a></div>
+        <div class="billboard-slide"><a href="https://tilawatquran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> تلاوة و حفظ القرآن الكريم</a></div>
+        <div class="billboard-slide"><a href="https://ayatoday.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> آية اليوم للتدبر و التذكير اليومي</a></div>
+        <div class="billboard-slide"><a href="https://svque.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> منصة فضاء المعرفة</a></div>
+        <div class="billboard-slide"><a href="https://worldradios.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> إذاعات عالمية بين يديك في مكان واحد</a></div>
+        <div class="billboard-slide"><a href="https://nokatapp.vercel.app" target="_blank" class="friend-link"><i class="fas fa-bullhorn"></i> نكت مغربية ضحك و ترفيه بلا حدود</a></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -238,17 +339,10 @@
   </div>
 </nav>
 
-<!-- CAROUSEL SITES AMIS (CERCLE ROUGE DEVANT LE TITRE) -->
-<div class="friends-carousel-wrap">
-  <div class="friends-track">
-    <a href="https://radiocoran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>راديو القرآن الكريم</a>
-    <a href="https://tilawatquran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>تلاوة و حفظ القرآن الكريم</a>
-    <a href="https://ayatoday.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>آية اليوم للتدبر و التذكير اليومي</a>
-    <a href="https://svque.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>منصة فضاء المعرفة</a>
-    <a href="https://worldradios.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>إذاعات عالمية بين يديك في مكان واحد</a>
-    <a href="https://nokatapp.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>نكت مغربية ضحك و ترفيه بلا حدود</a>
-    <a href="https://wassitjob.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>منصة عرض و طلب العمل في المغرب</a>
-    <a href="https://radiocoran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>راديو القرآن الكريم</a>
+<!-- MESSAGE DÉFILANT -->
+<div class="marquee-container">
+  <div class="marquee-track">
+    <span>مرحبا بكم في منتدى محبي ومشجعي نادي الكوكب الرياضي المراكشي</span>
   </div>
 </div>
 
@@ -287,7 +381,7 @@
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="container">
+  <div class="container py-1">
     <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M. Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Forum <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.9</p>
   </div>
 </footer>
@@ -431,6 +525,16 @@
   const postTitle=$('postTitle'),postContent=$('postContent'),titleCounter=$('titleCounter'),contentCounter=$('contentCounter');
   const recModal=new bootstrap.Modal($('reclamationModal')),recForm=$('reclamationForm'),recMsgCounter=$('recMsgCounter');
   const adminModal=new bootstrap.Modal($('adminModal')),adminUserList=$('adminUserList'),adminResetBtn=$('adminResetBtn');
+
+  const slides = document.querySelectorAll('.billboard-slide');
+  let currentSlide = 0;
+  if (slides.length > 0) {
+    setInterval(() => {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }, 3500);
+  }
 
   $('closeWelcomeBtn')?.addEventListener('click', function() {
     const overlay = $('welcomeOverlay');
