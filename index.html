@@ -13,7 +13,7 @@
     .kacm-red{color:#DA291C}.btn-kacm{background-color:#DA291C;color:#fff;border:none}.btn-kacm:hover{background-color:#b82218;color:#fff}
     .btn-outline-kacm{border:2px solid #DA291C;color:#DA291C;background:transparent}.btn-outline-kacm:hover{background:#DA291C;color:#fff}
     .navbar-kacm{background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.05);border-bottom:3px solid #DA291C}
-    .forum-card{border-left:5px solid #DA291C;background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.04);scroll-margin-bottom:80px}
+    .forum-card{border-left:5px solid #DA291C;background:#fff;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.04);scroll-margin-bottom:120px}
     .post-author{font-weight:600;color:#DA291C}.reply-badge{font-size:.75rem;background:#f1f1f1;border-radius:30px;padding:2px 12px}
     .landing-hero{background:#fff;border-radius:32px 32px 0 0;padding:2rem 1rem;margin-top:-20px;position:relative;z-index:2}
     .hero-image{width:120px;height:120px;margin:0 auto 10px;display:block;border-radius:50%;border:4px solid #DA291C;object-fit:cover;box-shadow:0 4px 20px rgba(218,41,28,.2);background:#fff;padding:8px}
@@ -27,11 +27,71 @@
     .reply-to-badge{font-size:.7rem;color:#e67e22;background:#fde8d0;padding:1px 10px;border-radius:20px;display:inline-block;margin-bottom:4px}
     .container{max-width:600px;padding-left:16px;padding-right:16px}
     .hidden{display:none!important}.pointer{cursor:pointer}
-    .page-content{margin-top:76px;flex:1 0 auto;transition:all .3s ease;padding-bottom:90px!important}
+    .page-content{margin-top:125px;flex:1 0 auto;transition:all .3s ease;padding-bottom:100px!important}
     .admin-badge{background:#DA291C;color:#fff;font-size:.7rem;padding:2px 10px;border-radius:20px;margin-left:6px}
     .modal-backdrop{z-index:1040!important}.modal{z-index:1050!important}.modal-backdrop.show{opacity:.5}.modal-open .modal{overflow-y:auto}
-    .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:3px solid #DA291C;padding:12px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
-    .footer p{margin:0;font-size:.85rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
+    
+    /* === FOOTER === */
+    .footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #DA291C;padding:8px 0;text-align:center;z-index:1030;box-shadow:0 -2px 10px rgba(0,0,0,.05)}
+    .footer p{margin:0;font-size:.8rem;color:#333}.footer .highlight{color:#DA291C;font-weight:600}.footer .fa-crown{color:#f1c40f}
+
+    /* === SITES AMIS DE LA GAUCHE VERS LA DROITE === */
+    .friends-carousel-wrap {
+      position: fixed;
+      top: 61px;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(5px);
+      overflow: hidden;
+      white-space: nowrap;
+      z-index: 1029;
+      padding: 5px 0;
+      border-bottom: 1px dashed #ffd6d0;
+      box-shadow: 0 2px 5px rgba(0,0,0,.03);
+    }
+    .friends-track {
+      display: inline-block;
+      white-space: nowrap;
+      animation: scrollFriendsLeftToRight 22s linear infinite;
+    }
+    .friends-track:hover {
+      animation-play-state: paused;
+    }
+    .friend-link {
+      display: inline-block;
+      color: #444;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0 25px;
+      direction: rtl;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .friend-link:hover {
+      color: #DA291C;
+      transform: scale(1.15) translateY(-2px);
+      text-shadow: 0 4px 8px rgba(218,41,28,0.2);
+    }
+    .friend-link i {
+      font-size: 0.65rem;
+      margin-left: 10px;
+      margin-right: 0;
+      color: #DA291C;
+      vertical-align: middle;
+      animation: pulseIcon 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scrollFriendsLeftToRight {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes pulseIcon {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
     .reply-actions{display:flex;gap:8px;align-items:center}.reply-actions button{padding:0 6px;font-size:.75rem}
     .btn-reply-to{background:transparent;border:none;color:#DA291C;font-size:.75rem;padding:0 4px}.btn-reply-to:hover{text-decoration:underline}
     .reply-indent{margin-left:20px;border-left:2px dashed #ddd;padding-left:12px}
@@ -62,15 +122,107 @@
     .admin-stat .num{font-size:1.5rem;font-weight:800;color:#DA291C}
     .admin-stat .lbl{font-size:.75rem;color:#666}
 
+    /* === MESSAGE DE BIENVENUE ANIMÉ (SANS CADRE) === */
+    #welcomeOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(218, 41, 28, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeInWelcome 0.5s ease-out forwards;
+    }
+
+    .welcome-box {
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 2.5rem 2rem;
+      border-radius: 28px;
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+      box-shadow: none;
+      animation: scaleUpWelcome 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .welcome-box h2 {
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .welcome-box p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: #f8f9fa;
+    }
+
+    .welcome-box .hero-image {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 15px;
+      border: 3px solid #fff;
+    }
+
+    .welcome-box .btn-ok {
+      background-color: #fff;
+      color: #DA291C;
+      font-weight: 700;
+      padding: 0.6rem 2rem;
+      border-radius: 50px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    .welcome-box .btn-ok:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeInWelcome {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleUpWelcome {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeOutWelcome {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.8); }
+    }
+
+    .welcome-closing {
+      animation: fadeOutWelcome 0.4s ease-in forwards !important;
+    }
+
     @media(max-width:576px){
-      .page-content{padding-bottom:100px!important}
-      .footer p{font-size:.75rem}
+      .page-content{padding-bottom:120px!important; margin-top:115px}
+      .friends-carousel-wrap{top:53px}
+      .footer p{font-size:.7rem}
       .hero-image{width:90px;height:90px;padding:6px}
-      .forum-card{scroll-margin-bottom:100px}
+      .forum-card{scroll-margin-bottom:140px}
     }
   </style>
 </head>
 <body>
+
+<!-- MESSAGE DE BIENVENUE -->
+<div id="welcomeOverlay">
+  <div class="welcome-box">
+    <img src="images/kacm.png" alt="KACM" class="hero-image">
+    <h2>Bienvenue sur KACM Forum</h2>
+    <p>Le point de ralliement des supporters du KACM.<br>Exprimez-vous dans le respect !</p>
+    <button id="closeWelcomeBtn" class="btn btn-ok">OK</button>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav class="navbar navbar-kacm fixed-top py-2">
@@ -86,6 +238,20 @@
   </div>
 </nav>
 
+<!-- CAROUSEL SITES AMIS (CERCLE ROUGE DEVANT LE TITRE) -->
+<div class="friends-carousel-wrap">
+  <div class="friends-track">
+    <a href="https://radiocoran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>راديو القرآن الكريم</a>
+    <a href="https://tilawatquran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>تلاوة و حفظ القرآن الكريم</a>
+    <a href="https://ayatoday.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>آية اليوم للتدبر و التذكير اليومي</a>
+    <a href="https://svque.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>منصة فضاء المعرفة</a>
+    <a href="https://worldradios.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>إذاعات عالمية بين يديك في مكان واحد</a>
+    <a href="https://nokatapp.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>نكت مغربية ضحك و ترفيه بلا حدود</a>
+    <a href="https://wassitjob.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>منصة عرض و طلب العمل في المغرب</a>
+    <a href="https://radiocoran.vercel.app" target="_blank" class="friend-link"><i class="fas fa-circle"></i>راديو القرآن الكريم</a>
+  </div>
+</div>
+
 <!-- LANDING -->
 <div id="landingPage" class="page-content">
   <div class="container mt-3">
@@ -94,7 +260,7 @@
         <img src="images/kacm.png" alt="KACM" class="hero-image" id="kacmLogo">
       </div>
       <h1 class="fw-bold mt-2" style="color:#DA291C;">KACM Supporters</h1>
-      <p class="text-muted">Le forum des lions de Marrakech</p>
+      <p class="text-muted mb-1">Le forum des Kawkabis.</p>
       <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
         <button id="showLoginBtn" class="btn btn-kacm px-4"><i class="fas fa-sign-in-alt me-1"></i>Se connecter</button>
         <button id="showRegisterBtn" class="btn btn-outline-kacm px-4"><i class="fas fa-user-plus me-1"></i>S'inscrire</button>
@@ -122,7 +288,7 @@
 <!-- FOOTER -->
 <footer class="footer">
   <div class="container">
-    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M.Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.9</p>
+    <p><i class="fas fa-crown"></i> Créé Par : <span class="highlight">M. Seddik ELidrissi</span> <span class="mx-2">|</span> <i class="fas fa-futbol kacm-red"></i> KACM Supporters <span class="mx-2">|</span> <i class="fas fa-code"></i> v3.9</p>
   </div>
 </footer>
 
@@ -250,11 +416,9 @@
 (function(){
   const API_URL='https://script.google.com/macros/s/AKfycbyazlokmB2sNXTobAnfGYkEAM_607kXGAsgo7RW9TKlfW1MBPHezShZGMvJpcXRVLfg8Q/exec';
   const MAX_TITLE=50,MAX_CONTENT=500,MAX_REPLY=250,ADMIN_PASS='Seddik';
-  const REPLIES_STEP=3; // Combien de réponses on ajoute/retire à chaque clic
+  const REPLIES_STEP=3;
 
   let currentUser=null,posts=[],isLoginMode=true;
-  // Stocke l'état d'expansion pour chaque post: nombre de réponses visibles
-  // Valeur initiale = 1 (première réponse seulement)
   let visibleRepliesCount={};
   let adminUsersCache=[];
 
@@ -267,6 +431,16 @@
   const postTitle=$('postTitle'),postContent=$('postContent'),titleCounter=$('titleCounter'),contentCounter=$('contentCounter');
   const recModal=new bootstrap.Modal($('reclamationModal')),recForm=$('reclamationForm'),recMsgCounter=$('recMsgCounter');
   const adminModal=new bootstrap.Modal($('adminModal')),adminUserList=$('adminUserList'),adminResetBtn=$('adminResetBtn');
+
+  $('closeWelcomeBtn')?.addEventListener('click', function() {
+    const overlay = $('welcomeOverlay');
+    if (overlay) {
+      overlay.classList.add('welcome-closing');
+      setTimeout(() => {
+        overlay.remove();
+      }, 400);
+    }
+  });
 
   $('kacmLogo')?.addEventListener('error',function(){this.style.display='none';const d=document.createElement('div');d.innerHTML='<i class="fas fa-shield-alt" style="font-size:4rem;color:#DA291C"></i>';this.parentNode.appendChild(d);});
 
@@ -298,7 +472,6 @@
     else postsList.innerHTML=`<div class="text-center text-muted py-5"><i class="fas fa-exclamation-triangle fa-2x mb-2"></i><p>${res.message||'Erreur'}</p><button class="btn btn-outline-kacm btn-sm" onclick="location.reload()">Réessayer</button></div>`;
   }
 
-  // === RENDER AVEC TOGGLE AFFICHER PLUS / MOINS ===
   function renderPosts(){
     if(!posts.length){postsList.innerHTML='<div class="text-center text-muted py-5"><i class="fas fa-comment-slash fa-2x mb-2"></i><p>Aucun sujet</p></div>';return;}
     let html='';
@@ -308,7 +481,6 @@
       const canDeletePost=isAuth||isAdm;
       const tCls=getTextClass(p.title),cCls=getTextClass(p.content);
 
-      // Initialiser: par défaut = 1 réponse visible
       if(visibleRepliesCount[p.id]===undefined) visibleRepliesCount[p.id]=1;
 
       let rep='';
@@ -326,7 +498,6 @@
           rep+=`<div class="reply-item"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><strong class="kacm-red">${mr.authorName}</strong> <small class="text-muted">${new Date(mr.createdAt).toLocaleDateString()}</small><div class="reply-text ${mCls}">${mr.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${mr.id}" data-rn="${mr.authorName}"><i class="fas fa-reply"></i> Répondre</button>`:''}${canDeleteReply?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${mr.id}" title="Supprimer"><i class="fas fa-times"></i></button>`:''}</div></div><div class="reply-indent">${subs.filter(s=>s.replyTo===mr.id).map(s=>{const sCls=getTextClass(s.text);const canDeleteSub=isLoggedIn()&&(currentUser.id===s.authorId||isAdm);return`<div class="reply-item reply-to"><div class="d-flex justify-content-between align-items-start"><div style="flex:1"><span class="reply-to-badge"><i class="fas fa-reply"></i> À <strong>${getReplyAuthor(s.replyTo,p)||'?'}</strong></span><div><strong class="kacm-red">${s.authorName}</strong> <small class="text-muted">${new Date(s.createdAt).toLocaleDateString()}</small></div><div class="reply-text ${sCls}">${s.text}</div></div><div class="reply-actions">${isLoggedIn()?`<button class="btn-reply-to replay-btn" data-pid="${p.id}" data-rid="${s.id}" data-rn="${s.authorName}"><i class="fas fa-reply"></i></button>`:''}${canDeleteSub?`<button class="btn btn-sm btn-outline-danger del-reply-btn" data-pid="${p.id}" data-rid="${s.id}" title="Supprimer"><i class="fas fa-times"></i></button>`:''}</div></div></div>`;}).join('')}</div></div>`;
         });
 
-        // Bouton TOGGLE: Afficher plus / Afficher moins
         if(totalMain>1){
           if(hasMore){
             const remaining=totalMain-currentVisible;
@@ -350,15 +521,12 @@
   }
 
   function attachEvents(){
-    // === TOGGLE AFFICHER PLUS / MOINS ===
     document.querySelectorAll('.toggle-replies-btn').forEach(b=>b.onclick=function(){
       const pid=this.dataset.pid;
       const action=this.dataset.action;
       if(action==='more'){
-        // Ajouter REPLIES_STEP réponses
         visibleRepliesCount[pid]=(visibleRepliesCount[pid]||1)+REPLIES_STEP;
       } else {
-        // Retourner à 1 réponse (réinitialiser)
         visibleRepliesCount[pid]=1;
       }
       renderPosts();
@@ -372,7 +540,6 @@
     document.querySelectorAll('.replay-btn').forEach(b=>b.onclick=function(e){e.stopPropagation();const pid=this.dataset.pid,rid=this.dataset.rid,rn=this.dataset.rn,f=$(`rf-${pid}`);if(f){f.classList.remove('hidden');f.querySelector('.reply-ctx').innerHTML=`<i class="fas fa-reply-all kacm-red"></i> À <strong>${rn}</strong>`;const inp=f.querySelector('.reply-input');if(inp){inp.dataset.replyto=rid;inp.placeholder=`Répondre à ${rn}...`;inp.focus();inp.value='';}f.querySelector('.reply-ctr').textContent='0';}});
   }
 
-  // === AUTH ===
   function openAuth(mode){
     closeAllModals();authForm.reset();isLoginMode=mode==='login';
     authModalLabel.innerHTML=isLoginMode?'<i class="fas fa-sign-in-alt kacm-red me-2"></i>Connexion':'<i class="fas fa-user-plus kacm-red me-2"></i>Inscription';
@@ -429,7 +596,6 @@
     },800);
   };
 
-  // === ADMIN PANEL ===
   async function loadAdminPanel(btn){
     const usersRes=await api({action:'adminGetUsers',password:ADMIN_PASS},btn);
     if(!usersRes.success){showToast('error','Erreur',usersRes.message||'Impossible de charger');return;}
